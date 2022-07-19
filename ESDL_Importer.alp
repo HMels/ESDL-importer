@@ -4,18 +4,18 @@
 	         AnyLogic Project File 
 *************************************************	         
 -->
-<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.7.12.202205231125" AlpVersion="8.7.5">
+<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.7.12.202205250418" AlpVersion="8.7.5">
 <Model>
 	<Id>1656319835072</Id>
-	<Name><![CDATA[ESDL_TrainingModel]]></Name>
+	<Name><![CDATA[ESDL_Importer]]></Name>
 	<EngineVersion>6</EngineVersion>
 	<JavaPackageName><![CDATA[esdl_trainingmodel]]></JavaPackageName>
-	<ModelTimeUnit><![CDATA[Second]]></ModelTimeUnit>
+	<ModelTimeUnit><![CDATA[Hour]]></ModelTimeUnit>
 	<ActiveObjectClasses>
 		<!--   =========   Active Object Class   ========  -->
 		<ActiveObjectClass>
 			<Id>1656319835091</Id>
-			<Name><![CDATA[Main]]></Name>
+			<Name><![CDATA[Model]]></Name>
 			<ClientAreaTopLeft><X>0</X><Y>0</Y></ClientAreaTopLeft>
 			<Import><![CDATA[import java.io.IOException;
 import esdl.Building;
@@ -26,23 +26,13 @@ import esdl.Geometry;
 import esdl.HeatingDemand;
 import esdl.BiomassHeater;
 import esdl.HeatPump;]]></Import>
-			<StartupCode><![CDATA[try {
-	p_importer = new ESDLImporter("Apeldoorn_Noord_Case.esdl");
-	//p_importer = new ESDLImporter("Apeldoorn_Noord_BuildingsBMandHSandHPandHDandHN.esdl");
-}
-catch(IOException e){
-	traceln(e);
-}
-
-// Functies ophalen
+			<StartupCode><![CDATA[// Functies ophalen
 f_buildingImporter();
 f_heatNetworkImporter();
 f_heatStorageImporter();
 f_heatingDemandImporter();
 f_heatPumpImporter();
-f_biomassPlantImporter();
-
-]]></StartupCode>
+f_biomassPlantImporter();]]></StartupCode>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1656319835089</Id>
@@ -111,11 +101,11 @@ f_biomassPlantImporter();
 					<OccurrenceDate>1656403200000</OccurrenceDate>
 					<OccurrenceTime Class="CodeUnitValue">
 						<Code><![CDATA[0]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</OccurrenceTime>
 					<RecurrenceCode Class="CodeUnitValue">
 						<Code><![CDATA[1]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</RecurrenceCode>
 			</DatasetsCreationProperties>
 			<ScaleRuler>
@@ -137,61 +127,12 @@ f_biomassPlantImporter();
 			<CurrentLevel>1656319835090</CurrentLevel>
 			<ConnectionsId>1656319835084</ConnectionsId>
 			<Variables>
-				<Variable Class="PlainVariable">
-					<Id>1656508776982</Id>
-					<Name><![CDATA[v_coordinateLine_bottomcoordinates]]></Name>
-					<X>730</X><Y>60</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
-						<Type><![CDATA[double[]]]></Type>        
-						<InitialValue Class="CodeValue">
-							<Code><![CDATA[{ 52.239102, 5.978529 };]]></Code>
-						</InitialValue>
-					</Properties>
-				</Variable>
-				<Variable Class="PlainVariable">
-					<Id>1656508776984</Id>
-					<Name><![CDATA[v_coordinateLine_top_coordinates]]></Name>
-					<X>730</X><Y>30</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
-						<Type><![CDATA[double[]]]></Type>        
-						<InitialValue Class="CodeValue">
-							<Code><![CDATA[{ 52.246018, 5.988958 };]]></Code>
-						</InitialValue>
-					</Properties>
-				</Variable>
-				<Variable Class="Parameter">
-					<Id>1656321275555</Id>
-					<Name><![CDATA[p_importer]]></Name>
-					<X>1040</X><Y>20</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[ESDLImporter]]></Type>
-						<UnitType><![CDATA[NONE]]></UnitType>
-						<SdArray>false</SdArray>
-						<ParameterEditor>
-							<Id>1656321275553</Id>
-							<EditorContolType>TEXT_BOX</EditorContolType>
-							<MinSliderValue><![CDATA[0]]></MinSliderValue>
-							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
-							<DelimeterType>NO_DELIMETER</DelimeterType>
-						</ParameterEditor>
-					</Properties>                 
-				</Variable>
 				<Variable Class="CollectionVariable">
 					<Id>1656322234036</Id>
 					<Name><![CDATA[c_buildings]]></Name>
-					<X>1280</X><Y>110</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>880</X><Y>310</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -206,7 +147,9 @@ f_biomassPlantImporter();
 				<Variable Class="CollectionVariable">
 					<Id>1656490448197</Id>
 					<Name><![CDATA[c_heatNetworks]]></Name>
-					<X>1280</X><Y>140</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>880</X><Y>330</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -221,7 +164,9 @@ f_biomassPlantImporter();
 				<Variable Class="CollectionVariable">
 					<Id>1656492744370</Id>
 					<Name><![CDATA[c_heatStorages]]></Name>
-					<X>1280</X><Y>170</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>880</X><Y>350</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -236,7 +181,9 @@ f_biomassPlantImporter();
 				<Variable Class="CollectionVariable">
 					<Id>1656493336586</Id>
 					<Name><![CDATA[c_heatingDemands]]></Name>
-					<X>1280</X><Y>200</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>880</X><Y>370</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -251,7 +198,9 @@ f_biomassPlantImporter();
 				<Variable Class="CollectionVariable">
 					<Id>1656505514728</Id>
 					<Name><![CDATA[c_heatPumps]]></Name>
-					<X>1280</X><Y>230</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>880</X><Y>390</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -266,7 +215,9 @@ f_biomassPlantImporter();
 				<Variable Class="CollectionVariable">
 					<Id>1656507238557</Id>
 					<Name><![CDATA[c_pointsPerBuilding]]></Name>
-					<X>1280</X><Y>80</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>880</X><Y>430</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -281,7 +232,9 @@ f_biomassPlantImporter();
 				<Variable Class="CollectionVariable">
 					<Id>1656592886997</Id>
 					<Name><![CDATA[c_biomassPlants]]></Name>
-					<X>1280</X><Y>260</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>880</X><Y>410</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -300,7 +253,9 @@ f_biomassPlantImporter();
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656334050220</Id>
 					<Name><![CDATA[f_buildingImporter]]></Name>
-					<X>1040</X><Y>110</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>720</X><Y>160</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -319,9 +274,6 @@ for (Building b : c_buildings) {
 	
 	
 }
-
-//double zeroX = buildings.get(0).c_pointCollection.get(0).getLon();
-//double zeroY = buildings.get(0).c_pointCollection.get(0).getLat();
 ]]></Body>
 				</Function>
 				<Function AccessType="default" StaticFunction="false">
@@ -329,7 +281,9 @@ for (Building b : c_buildings) {
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656488953712</Id>
 					<Name><![CDATA[f_heatNetworkImporter]]></Name>
-					<X>1040</X><Y>140</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>720</X><Y>180</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -350,7 +304,9 @@ for (HeatNetwork h : c_heatNetworks) {
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656492703801</Id>
 					<Name><![CDATA[f_heatStorageImporter]]></Name>
-					<X>1040</X><Y>170</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>720</X><Y>200</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -371,7 +327,9 @@ for (HeatStorage hs : c_heatStorages) {
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656502850597</Id>
 					<Name><![CDATA[f_heatingDemandImporter]]></Name>
-					<X>1040</X><Y>200</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>720</X><Y>220</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -392,7 +350,9 @@ for (HeatingDemand hd : c_heatingDemands) {
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656506114466</Id>
 					<Name><![CDATA[f_heatPumpImporter]]></Name>
-					<X>1040</X><Y>230</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>720</X><Y>240</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -413,7 +373,9 @@ for (HeatPump hp : c_heatPumps) {
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656592801769</Id>
 					<Name><![CDATA[f_biomassPlantImporter]]></Name>
-					<X>1040</X><Y>260</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
+					<X>720</X><Y>260</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -456,7 +418,7 @@ for (BiomassHeater bm : c_biomassPlants) {
 				<EmbeddedObject>
 					<Id>1656507366846</Id>
 					<Name><![CDATA[buildings]]></Name>
-					<X>730</X><Y>130</Y>
+					<X>720</X><Y>310</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -533,7 +495,7 @@ for (BiomassHeater bm : c_biomassPlants) {
 				<EmbeddedObject>
 					<Id>1656508426587</Id>
 					<Name><![CDATA[heatStorages]]></Name>
-					<X>730</X><Y>190</Y>
+					<X>720</X><Y>350</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -607,7 +569,7 @@ for (BiomassHeater bm : c_biomassPlants) {
 				<EmbeddedObject>
 					<Id>1656578204086</Id>
 					<Name><![CDATA[solarPVs]]></Name>
-					<X>730</X><Y>280</Y>
+					<X>720</X><Y>430</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -668,7 +630,7 @@ for (BiomassHeater bm : c_biomassPlants) {
 				<EmbeddedObject>
 					<Id>1656584803881</Id>
 					<Name><![CDATA[buildingUnits]]></Name>
-					<X>1040</X><Y>60</Y>
+					<X>720</X><Y>100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -729,7 +691,7 @@ for (BiomassHeater bm : c_biomassPlants) {
 				<EmbeddedObject>
 					<Id>1656677677054</Id>
 					<Name><![CDATA[biomassPlants]]></Name>
-					<X>730</X><Y>310</Y>
+					<X>720</X><Y>410</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -803,7 +765,7 @@ for (BiomassHeater bm : c_biomassPlants) {
 				<EmbeddedObject>
 					<Id>1656687429576</Id>
 					<Name><![CDATA[heatPumps]]></Name>
-					<X>730</X><Y>250</Y>
+					<X>720</X><Y>390</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -877,7 +839,7 @@ for (BiomassHeater bm : c_biomassPlants) {
 				<EmbeddedObject>
 					<Id>1656688049829</Id>
 					<Name><![CDATA[heatingDemands]]></Name>
-					<X>730</X><Y>220</Y>
+					<X>720</X><Y>370</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -948,7 +910,7 @@ for (BiomassHeater bm : c_biomassPlants) {
 				<EmbeddedObject>
 					<Id>1656688289627</Id>
 					<Name><![CDATA[heatNetworks]]></Name>
-					<X>730</X><Y>160</Y>
+					<X>720</X><Y>330</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1032,54 +994,6 @@ for (BiomassHeater bm : c_biomassPlants) {
 					<LevelVisibility>DIM_NON_CURRENT</LevelVisibility>
 
 			<Presentation>
-				<Image>
-					<Id>1656509834867</Id>
-					<Name><![CDATA[image2]]></Name>
-					<X>0</X><Y>0</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Width>660</Width>
-					<Height>440</Height>
-					<Rotation>0.0</Rotation>
-					<ImageFiles>
-						<ImageResourceReference>
-							<PackageName><![CDATA[esdl_trainingmodel]]></PackageName>
-							<ClassName><![CDATA[image2.png]]></ClassName>
-						</ImageResourceReference>
-					</ImageFiles>
-					<OriginalSize>false</OriginalSize>
-				</Image>
-				<Line>
-					<Id>1656506459740</Id>
-					<Name><![CDATA[coordinateLine]]></Name>
-					<Description><![CDATA[lo: 52.23100925485032, 5.9754147324698605
-rb: 52.24943868893129, 6.002588818254775]]></Description>
-					<X>111</X><Y>274</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>false</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>10</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-16777216</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<BeginArrowSize>1</BeginArrowSize>
-					<BeginArrowStyle>0</BeginArrowStyle>
-					<EndArrowSize>1</EndArrowSize>
-					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>195</Dx>
-					<Dy>-193</Dy>
-					<Dz>0</Dz>
-				</Line>
 				<EmbeddedObjectPresentation>
 					<Id>1656507371229</Id>
 					<Name><![CDATA[buildings_presentation]]></Name>
@@ -1118,28 +1032,6 @@ rb: 52.24943868893129, 6.002588818254775]]></Description>
 					<Latitude>0.0</Latitude>
 					<Longitude>0.0</Longitude>
 				</EmbeddedObjectPresentation>
-				<Image>
-					<Id>1656509831587</Id>
-					<Name><![CDATA[image1]]></Name>
-					<X>420</X><Y>320</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Width>150</Width>
-					<Height>100</Height>
-					<Rotation>0.0</Rotation>
-					<ImageFiles>
-						<ImageResourceReference>
-							<PackageName><![CDATA[esdl_trainingmodel]]></PackageName>
-							<ClassName><![CDATA[image1.png]]></ClassName>
-						</ImageResourceReference>
-					</ImageFiles>
-					<OriginalSize>false</OriginalSize>
-				</Image>
 				<EmbeddedObjectPresentation>
 					<Id>1656677678899</Id>
 					<Name><![CDATA[biomassPlants_presentation]]></Name>
@@ -1308,11 +1200,11 @@ import esdl.BuildingTypeRestriction;]]></Import>
 					<OccurrenceDate>1656403200000</OccurrenceDate>
 					<OccurrenceTime Class="CodeUnitValue">
 						<Code><![CDATA[0]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</OccurrenceTime>
 					<RecurrenceCode Class="CodeUnitValue">
 						<Code><![CDATA[1]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</RecurrenceCode>
 			</DatasetsCreationProperties>
 			<ScaleRuler>
@@ -1337,6 +1229,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1656324091064</Id>
 					<Name><![CDATA[p_buildingESDL]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>410</X><Y>30</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1358,6 +1252,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1656334584918</Id>
 					<Name><![CDATA[p_floorArea]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>410</X><Y>60</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1380,6 +1276,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1656335614920</Id>
 					<Name><![CDATA[p_buildingYear]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>410</X><Y>90</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1401,6 +1299,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1656505863162</Id>
 					<Name><![CDATA[p_BAG_ID]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>410</X><Y>120</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1422,6 +1322,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1656583045850</Id>
 					<Name><![CDATA[p_buildingType]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>410</X><Y>150</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1443,6 +1345,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 				<Variable Class="CollectionVariable">
 					<Id>1656506607140</Id>
 					<Name><![CDATA[c_households]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>230</X><Y>60</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1458,6 +1362,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 				<Variable Class="CollectionVariable">
 					<Id>1656506607142</Id>
 					<Name><![CDATA[c_industry]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>230</X><Y>90</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1473,6 +1379,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 				<Variable Class="CollectionVariable">
 					<Id>1656506607144</Id>
 					<Name><![CDATA[c_pointCollection]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>230</X><Y>30</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1488,6 +1396,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 				<Variable Class="CollectionVariable">
 					<Id>1656578651154</Id>
 					<Name><![CDATA[c_pvPanelESDL]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>230</X><Y>120</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1503,6 +1413,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 				<Variable Class="CollectionVariable">
 					<Id>1656579123234</Id>
 					<Name><![CDATA[c_pvPanelAgent]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>230</X><Y>150</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1518,6 +1430,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 				<Variable Class="CollectionVariable">
 					<Id>1656584219219</Id>
 					<Name><![CDATA[c_buildingUnitESDL]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>230</X><Y>180</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1537,6 +1451,8 @@ import esdl.BuildingTypeRestriction;]]></Import>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656335477175</Id>
 					<Name><![CDATA[f_loadBuildingData]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>40</X><Y>30</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1555,6 +1471,8 @@ p_buildingType = buildingType.getName();]]></Body>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656506607146</Id>
 					<Name><![CDATA[f_getHouseholdAssets]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>40</X><Y>180</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1592,6 +1510,8 @@ for (Asset asset : assetList) {
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656506607148</Id>
 					<Name><![CDATA[f_getPolygon]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>40</X><Y>120</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1623,6 +1543,8 @@ else {
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656506607150</Id>
 					<Name><![CDATA[f_drawPolygon]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>40</X><Y>150</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1640,7 +1562,7 @@ polyline.setVisible(true);
 //double zeroX = c_pointCollection.get(0).getLon();
 
 for (int i=0	; i<c_pointCollection.size(); i++){
-	double[] dxdy = f_coordinates2position(c_pointCollection.get(i).getLat(), c_pointCollection.get(i).getLon());
+	double[] dxdy = model.f_coordinates2position(c_pointCollection.get(i).getLat(), c_pointCollection.get(i).getLon());
 	double dx = dxdy[0];
 	double dy = dxdy[1];
 	polyline.setPoint(i, dx, dy);
@@ -1648,53 +1570,11 @@ for (int i=0	; i<c_pointCollection.size(); i++){
 				</Function>
 				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
-					<ReturnType><![CDATA[double[]]]></ReturnType>
-					<Id>1656506607152</Id>
-					<Name><![CDATA[f_coordinates2position]]></Name>
-					<Description><![CDATA[@HMels
-@02-06-2022
-
-takes the longitude and latitude of a household or industry, and couples this to a polyshape and a building]]></Description>
-					<X>40</X><Y>60</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Parameter>
-						<Name><![CDATA[lat]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Parameter>
-						<Name><![CDATA[lon]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Body><![CDATA[// the longitude & latitude of the min and max point of the coordinateLine
-double min_point_lon = main.v_coordinateLine_bottomcoordinates[1];
-double min_point_lat = main.v_coordinateLine_bottomcoordinates[0];
-double max_point_lon = main.v_coordinateLine_top_coordinates[1];
-double max_point_lat = main.v_coordinateLine_top_coordinates[0];
-
-// calculate the differences of the
-// points to be able to translate real coordinates onto the line
-double dlon = max_point_lon - min_point_lon;
-double dlat = max_point_lat - min_point_lat;
-double dx = main.coordinateLine.getDx();
-double dy = main.coordinateLine.getDy();
-double x = main.coordinateLine.getX();
-double y = main.coordinateLine.getY();
-
-// translating the input (lon, lat) into the (x,y) coordinates of the image
-double lon_x = ( lon - min_point_lon )*dx/dlon + x;
-double lat_y = ( lat - min_point_lat )*dy/dlat + y;
-
-double[] coordinates = { lon_x, lat_y };
-return coordinates;]]></Body>
-				</Function>
-				<Function AccessType="default" StaticFunction="false">
-					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
 					<ReturnType><![CDATA[boolean]]></ReturnType>
 					<Id>1656574584946</Id>
 					<Name><![CDATA[f_checkPresencePoints]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>40</X><Y>90</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1713,26 +1593,28 @@ return filled; ]]></Body>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656577080045</Id>
 					<Name><![CDATA[f_getBuildingAssets]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022]]></Description>
 					<X>40</X><Y>210</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Body><![CDATA[//Clear collection in Importer
-main.p_importer.c_pvPanels.clear();
-main.p_importer.c_buildingUnits.clear();
+model.p_importer.c_pvPanels.clear();
+model.p_importer.c_buildingUnits.clear();
 
 //Run function that collects the assets
-main.p_importer.processAssets(1, p_buildingESDL.getAsset());
+model.p_importer.processAssets(1, p_buildingESDL.getAsset());
 
 
 //save collection of desired assets in agent
-c_pvPanelESDL = main.p_importer.c_pvPanels;
-c_buildingUnitESDL = main.p_importer.c_buildingUnits;
+c_pvPanelESDL = model.p_importer.c_pvPanels;
+c_buildingUnitESDL = model.p_importer.c_buildingUnits;
 
 //create agents based on that collection and save these agents here
 for (PVPanel p : c_pvPanelESDL){
-	c_pvPanelAgent.add(main.add_solarPVs());
+	c_pvPanelAgent.add(model.add_solarPVs());
 }
 
 
@@ -1771,7 +1653,7 @@ for (BuildingUnit bu : c_buildingUnitESDL){
 			<ContainerLinks>
 				<ContainerLink>
 					<Id>1656507371243</Id>
-					<Name><![CDATA[main]]></Name>
+					<Name><![CDATA[model]]></Name>
 					<X>50</X><Y>-100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -1779,7 +1661,7 @@ for (BuildingUnit bu : c_buildingUnitESDL){
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
 						<PackageName><![CDATA[esdl_trainingmodel]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
+						<ClassName><![CDATA[Model]]></ClassName>
 					</ActiveObjectClass>
 				</ContainerLink>
 			</ContainerLinks>
@@ -1924,11 +1806,11 @@ for (BuildingUnit bu : c_buildingUnitESDL){
 					<OccurrenceDate>1656403200000</OccurrenceDate>
 					<OccurrenceTime Class="CodeUnitValue">
 						<Code><![CDATA[0]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</OccurrenceTime>
 					<RecurrenceCode Class="CodeUnitValue">
 						<Code><![CDATA[1]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</RecurrenceCode>
 			</DatasetsCreationProperties>
 			<ScaleRuler>
@@ -2088,11 +1970,11 @@ import esdl.Point;]]></Import>
 					<OccurrenceDate>1656576000000</OccurrenceDate>
 					<OccurrenceTime Class="CodeUnitValue">
 						<Code><![CDATA[0]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</OccurrenceTime>
 					<RecurrenceCode Class="CodeUnitValue">
 						<Code><![CDATA[1]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</RecurrenceCode>
 			</DatasetsCreationProperties>
 			<ScaleRuler>
@@ -2199,53 +2081,6 @@ if (geometry instanceof Point){
 f_drawPoint();]]></Body>
 				</Function>
 				<Function AccessType="default" StaticFunction="false">
-					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
-					<ReturnType><![CDATA[double[]]]></ReturnType>
-					<Id>1656688222612</Id>
-					<Name><![CDATA[f_coordinates2position]]></Name>
-					<Description><![CDATA[@HMels
-@02-06-2022
-
-takes the longitude and latitude of a household or industry, and couples this to a polyshape and a building]]></Description>
-					<X>60</X><Y>110</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Parameter>
-						<Name><![CDATA[lat]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Parameter>
-						<Name><![CDATA[lon]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Body><![CDATA[// the longitude & latitude of the min and max point of the coordinateLine
-double min_point_lon = main.v_coordinateLine_bottomcoordinates[1];
-double min_point_lat = main.v_coordinateLine_bottomcoordinates[0];
-double max_point_lon = main.v_coordinateLine_top_coordinates[1];
-double max_point_lat = main.v_coordinateLine_top_coordinates[0];
-
-// calculate the differences of the
-// points to be able to translate real coordinates onto the line
-double dlon = max_point_lon - min_point_lon;
-double dlat = max_point_lat - min_point_lat;
-double dx = main.coordinateLine.getDx();
-double dy = main.coordinateLine.getDy();
-double x = main.coordinateLine.getX();
-double y = main.coordinateLine.getY();
-
-
-
-
-// translating the input (lon, lat) into the (x,y) coordinates of the image
-double lon_x = ( lon - min_point_lon )*dx/dlon + x;
-double lat_y = ( lat - min_point_lat )*dy/dlat + y;
-
-double[] coordinates = { lon_x, lat_y };
-return coordinates;]]></Body>
-				</Function>
-				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>VOID</ReturnModificator>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656688222614</Id>
@@ -2255,13 +2090,11 @@ return coordinates;]]></Body>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[double[] dxdy = f_coordinates2position(p_latCoord, p_lonCoord);
+					<Body><![CDATA[double[] dxdy = model.f_coordinates2position(p_latCoord, p_lonCoord);
 double dx = dxdy[0];	
 double dy = dxdy[1];
 oval.setPos(dx, dy);
 text.setPos(dx-5, dy-5);
-//double zeroY = c_pointCollection.get(0).getLat();
-//double zeroX = c_pointCollection.get(0).getLon();
 ]]></Body>
 				</Function>
 			</Functions>
@@ -2290,7 +2123,7 @@ text.setPos(dx-5, dy-5);
 			<ContainerLinks>
 				<ContainerLink>
 					<Id>1656688290672</Id>
-					<Name><![CDATA[main]]></Name>
+					<Name><![CDATA[model]]></Name>
 					<X>50</X><Y>-100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -2298,7 +2131,7 @@ text.setPos(dx-5, dy-5);
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
 						<PackageName><![CDATA[esdl_trainingmodel]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
+						<ClassName><![CDATA[Model]]></ClassName>
 					</ActiveObjectClass>
 				</ContainerLink>
 			</ContainerLinks>
@@ -2455,11 +2288,11 @@ import esdl.Geometry;]]></Import>
 					<OccurrenceDate>1656576000000</OccurrenceDate>
 					<OccurrenceTime Class="CodeUnitValue">
 						<Code><![CDATA[0]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</OccurrenceTime>
 					<RecurrenceCode Class="CodeUnitValue">
 						<Code><![CDATA[1]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</RecurrenceCode>
 			</DatasetsCreationProperties>
 			<ScaleRuler>
@@ -2589,53 +2422,6 @@ if (geometry instanceof Point){
 f_drawPoint();]]></Body>
 				</Function>
 				<Function AccessType="default" StaticFunction="false">
-					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
-					<ReturnType><![CDATA[double[]]]></ReturnType>
-					<Id>1656508134665</Id>
-					<Name><![CDATA[f_coordinates2position]]></Name>
-					<Description><![CDATA[@HMels
-@02-06-2022
-
-takes the longitude and latitude of a household or industry, and couples this to a polyshape and a building]]></Description>
-					<X>50</X><Y>130</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Parameter>
-						<Name><![CDATA[lat]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Parameter>
-						<Name><![CDATA[lon]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Body><![CDATA[// the longitude & latitude of the min and max point of the coordinateLine
-double min_point_lon = main.v_coordinateLine_bottomcoordinates[1];
-double min_point_lat = main.v_coordinateLine_bottomcoordinates[0];
-double max_point_lon = main.v_coordinateLine_top_coordinates[1];
-double max_point_lat = main.v_coordinateLine_top_coordinates[0];
-
-// calculate the differences of the
-// points to be able to translate real coordinates onto the line
-double dlon = max_point_lon - min_point_lon;
-double dlat = max_point_lat - min_point_lat;
-double dx = main.coordinateLine.getDx();
-double dy = main.coordinateLine.getDy();
-double x = main.coordinateLine.getX();
-double y = main.coordinateLine.getY();
-
-
-
-
-// translating the input (lon, lat) into the (x,y) coordinates of the image
-double lon_x = ( lon - min_point_lon )*dx/dlon + x;
-double lat_y = ( lat - min_point_lat )*dy/dlat + y;
-
-double[] coordinates = { lon_x, lat_y };
-return coordinates;]]></Body>
-				</Function>
-				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>VOID</ReturnModificator>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656508164916</Id>
@@ -2645,7 +2431,7 @@ return coordinates;]]></Body>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[double[] dxdy = f_coordinates2position(p_latCoord, p_lonCoord);
+					<Body><![CDATA[double[] dxdy = model.f_coordinates2position(p_latCoord, p_lonCoord);
 double dx = dxdy[0];	
 double dy = dxdy[1];
 oval.setPos(dx, dy);
@@ -2680,7 +2466,7 @@ text.setPos(dx-5, dy-5);
 			<ContainerLinks>
 				<ContainerLink>
 					<Id>1656508430569</Id>
-					<Name><![CDATA[main]]></Name>
+					<Name><![CDATA[model]]></Name>
 					<X>50</X><Y>-100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -2688,7 +2474,7 @@ text.setPos(dx-5, dy-5);
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
 						<PackageName><![CDATA[esdl_trainingmodel]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
+						<ClassName><![CDATA[Model]]></ClassName>
 					</ActiveObjectClass>
 				</ContainerLink>
 			</ContainerLinks>
@@ -2845,11 +2631,11 @@ import esdl.Point;]]></Import>
 					<OccurrenceDate>1656576000000</OccurrenceDate>
 					<OccurrenceTime Class="CodeUnitValue">
 						<Code><![CDATA[0]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</OccurrenceTime>
 					<RecurrenceCode Class="CodeUnitValue">
 						<Code><![CDATA[1]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</RecurrenceCode>
 			</DatasetsCreationProperties>
 			<ScaleRuler>
@@ -2956,53 +2742,6 @@ if (geometry instanceof Point){
 f_drawPoint();]]></Body>
 				</Function>
 				<Function AccessType="default" StaticFunction="false">
-					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
-					<ReturnType><![CDATA[double[]]]></ReturnType>
-					<Id>1656687904863</Id>
-					<Name><![CDATA[f_coordinates2position]]></Name>
-					<Description><![CDATA[@HMels
-@02-06-2022
-
-takes the longitude and latitude of a household or industry, and couples this to a polyshape and a building]]></Description>
-					<X>80</X><Y>120</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Parameter>
-						<Name><![CDATA[lat]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Parameter>
-						<Name><![CDATA[lon]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Body><![CDATA[// the longitude & latitude of the min and max point of the coordinateLine
-double min_point_lon = main.v_coordinateLine_bottomcoordinates[1];
-double min_point_lat = main.v_coordinateLine_bottomcoordinates[0];
-double max_point_lon = main.v_coordinateLine_top_coordinates[1];
-double max_point_lat = main.v_coordinateLine_top_coordinates[0];
-
-// calculate the differences of the
-// points to be able to translate real coordinates onto the line
-double dlon = max_point_lon - min_point_lon;
-double dlat = max_point_lat - min_point_lat;
-double dx = main.coordinateLine.getDx();
-double dy = main.coordinateLine.getDy();
-double x = main.coordinateLine.getX();
-double y = main.coordinateLine.getY();
-
-
-
-
-// translating the input (lon, lat) into the (x,y) coordinates of the image
-double lon_x = ( lon - min_point_lon )*dx/dlon + x;
-double lat_y = ( lat - min_point_lat )*dy/dlat + y;
-
-double[] coordinates = { lon_x, lat_y };
-return coordinates;]]></Body>
-				</Function>
-				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>VOID</ReturnModificator>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656687904867</Id>
@@ -3012,13 +2751,11 @@ return coordinates;]]></Body>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[double[] dxdy = f_coordinates2position(p_latCoord, p_lonCoord);
+					<Body><![CDATA[double[] dxdy = model.f_coordinates2position(p_latCoord, p_lonCoord);
 double dx = dxdy[0];	
 double dy = dxdy[1];
 oval.setPos(dx, dy);
 text.setPos(dx-5, dy-5);
-//double zeroY = c_pointCollection.get(0).getLat();
-//double zeroX = c_pointCollection.get(0).getLon();
 ]]></Body>
 				</Function>
 			</Functions>
@@ -3047,7 +2784,7 @@ text.setPos(dx-5, dy-5);
 			<ContainerLinks>
 				<ContainerLink>
 					<Id>1656688051873</Id>
-					<Name><![CDATA[main]]></Name>
+					<Name><![CDATA[model]]></Name>
 					<X>50</X><Y>-100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -3055,7 +2792,7 @@ text.setPos(dx-5, dy-5);
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
 						<PackageName><![CDATA[esdl_trainingmodel]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
+						<ClassName><![CDATA[Model]]></ClassName>
 					</ActiveObjectClass>
 				</ContainerLink>
 			</ContainerLinks>
@@ -3212,11 +2949,11 @@ import esdl.Geometry;]]></Import>
 					<OccurrenceDate>1656576000000</OccurrenceDate>
 					<OccurrenceTime Class="CodeUnitValue">
 						<Code><![CDATA[0]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</OccurrenceTime>
 					<RecurrenceCode Class="CodeUnitValue">
 						<Code><![CDATA[1]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</RecurrenceCode>
 			</DatasetsCreationProperties>
 			<ScaleRuler>
@@ -3346,50 +3083,6 @@ if (geometry instanceof Point){
 f_drawPoint();]]></Body>
 				</Function>
 				<Function AccessType="default" StaticFunction="false">
-					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
-					<ReturnType><![CDATA[double[]]]></ReturnType>
-					<Id>1656687316484</Id>
-					<Name><![CDATA[f_coordinates2position]]></Name>
-					<Description><![CDATA[@HMels
-@02-06-2022
-
-takes the longitude and latitude of a household or industry, and couples this to a polyshape and a building]]></Description>
-					<X>50</X><Y>120</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Parameter>
-						<Name><![CDATA[lat]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Parameter>
-						<Name><![CDATA[lon]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Body><![CDATA[// the longitude & latitude of the min and max point of the coordinateLine
-double min_point_lon = main.v_coordinateLine_bottomcoordinates[1];
-double min_point_lat = main.v_coordinateLine_bottomcoordinates[0];
-double max_point_lon = main.v_coordinateLine_top_coordinates[1];
-double max_point_lat = main.v_coordinateLine_top_coordinates[0];
-
-// calculate the differences of the
-// points to be able to translate real coordinates onto the line
-double dlon = max_point_lon - min_point_lon;
-double dlat = max_point_lat - min_point_lat;
-double dx = main.coordinateLine.getDx();
-double dy = main.coordinateLine.getDy();
-double x = main.coordinateLine.getX();
-double y = main.coordinateLine.getY();
-
-// translating the input (lon, lat) into the (x,y) coordinates of the image
-double lon_x = ( lon - min_point_lon )*dx/dlon + x;
-double lat_y = ( lat - min_point_lat )*dy/dlat + y;
-
-double[] coordinates = { lon_x, lat_y };
-return coordinates;]]></Body>
-				</Function>
-				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>VOID</ReturnModificator>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656687316487</Id>
@@ -3399,7 +3092,7 @@ return coordinates;]]></Body>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[double[] dxdy = f_coordinates2position(p_latCoord, p_lonCoord);
+					<Body><![CDATA[double[] dxdy = model.f_coordinates2position(p_latCoord, p_lonCoord);
 double dx = dxdy[0];	
 double dy = dxdy[1];
 oval.setPos(dx, dy);
@@ -3434,7 +3127,7 @@ text.setPos(dx-5, dy-5);
 			<ContainerLinks>
 				<ContainerLink>
 					<Id>1656687431913</Id>
-					<Name><![CDATA[main]]></Name>
+					<Name><![CDATA[model]]></Name>
 					<X>50</X><Y>-100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -3442,7 +3135,7 @@ text.setPos(dx-5, dy-5);
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
 						<PackageName><![CDATA[esdl_trainingmodel]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
+						<ClassName><![CDATA[Model]]></ClassName>
 					</ActiveObjectClass>
 				</ContainerLink>
 			</ContainerLinks>
@@ -3596,11 +3289,11 @@ text.setPos(dx-5, dy-5);
 					<OccurrenceDate>1656662400000</OccurrenceDate>
 					<OccurrenceTime Class="CodeUnitValue">
 						<Code><![CDATA[0]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</OccurrenceTime>
 					<RecurrenceCode Class="CodeUnitValue">
 						<Code><![CDATA[1]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</RecurrenceCode>
 			</DatasetsCreationProperties>
 			<ScaleRuler>
@@ -3646,7 +3339,7 @@ text.setPos(dx-5, dy-5);
 			<ContainerLinks>
 				<ContainerLink>
 					<Id>1656578204159</Id>
-					<Name><![CDATA[main]]></Name>
+					<Name><![CDATA[model]]></Name>
 					<X>50</X><Y>-100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -3654,7 +3347,7 @@ text.setPos(dx-5, dy-5);
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
 						<PackageName><![CDATA[esdl_trainingmodel]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
+						<ClassName><![CDATA[Model]]></ClassName>
 					</ActiveObjectClass>
 				</ContainerLink>
 			</ContainerLinks>
@@ -3749,11 +3442,11 @@ text.setPos(dx-5, dy-5);
 					<OccurrenceDate>1656662400000</OccurrenceDate>
 					<OccurrenceTime Class="CodeUnitValue">
 						<Code><![CDATA[0]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</OccurrenceTime>
 					<RecurrenceCode Class="CodeUnitValue">
 						<Code><![CDATA[1]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</RecurrenceCode>
 			</DatasetsCreationProperties>
 			<ScaleRuler>
@@ -3799,7 +3492,7 @@ text.setPos(dx-5, dy-5);
 			<ContainerLinks>
 				<ContainerLink>
 					<Id>1656584803916</Id>
-					<Name><![CDATA[main]]></Name>
+					<Name><![CDATA[model]]></Name>
 					<X>50</X><Y>-100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -3807,7 +3500,7 @@ text.setPos(dx-5, dy-5);
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
 						<PackageName><![CDATA[esdl_trainingmodel]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
+						<ClassName><![CDATA[Model]]></ClassName>
 					</ActiveObjectClass>
 				</ContainerLink>
 			</ContainerLinks>
@@ -3906,11 +3599,11 @@ import esdl.Point;]]></Import>
 					<OccurrenceDate>1656662400000</OccurrenceDate>
 					<OccurrenceTime Class="CodeUnitValue">
 						<Code><![CDATA[0]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</OccurrenceTime>
 					<RecurrenceCode Class="CodeUnitValue">
 						<Code><![CDATA[1]]></Code>
-						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 					</RecurrenceCode>
 			</DatasetsCreationProperties>
 			<ScaleRuler>
@@ -4040,53 +3733,6 @@ if (geometry instanceof Point){
 f_drawPoint();]]></Body>
 				</Function>
 				<Function AccessType="default" StaticFunction="false">
-					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
-					<ReturnType><![CDATA[double[]]]></ReturnType>
-					<Id>1656675119193</Id>
-					<Name><![CDATA[f_coordinates2position]]></Name>
-					<Description><![CDATA[@HMels
-@02-06-2022
-
-takes the longitude and latitude of a household or industry, and couples this to a polyshape and a building]]></Description>
-					<X>50</X><Y>140</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Parameter>
-						<Name><![CDATA[lat]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Parameter>
-						<Name><![CDATA[lon]]></Name>
-						<Type><![CDATA[double]]></Type>
-					</Parameter>
-					<Body><![CDATA[// the longitude & latitude of the min and max point of the coordinateLine
-double min_point_lon = main.v_coordinateLine_bottomcoordinates[1];
-double min_point_lat = main.v_coordinateLine_bottomcoordinates[0];
-double max_point_lon = main.v_coordinateLine_top_coordinates[1];
-double max_point_lat = main.v_coordinateLine_top_coordinates[0];
-
-// calculate the differences of the
-// points to be able to translate real coordinates onto the line
-double dlon = max_point_lon - min_point_lon;
-double dlat = max_point_lat - min_point_lat;
-double dx = main.coordinateLine.getDx();
-double dy = main.coordinateLine.getDy();
-double x = main.coordinateLine.getX();
-double y = main.coordinateLine.getY();
-
-
-
-
-// translating the input (lon, lat) into the (x,y) coordinates of the image
-double lon_x = ( lon - min_point_lon )*dx/dlon + x;
-double lat_y = ( lat - min_point_lat )*dy/dlat + y;
-
-double[] coordinates = { lon_x, lat_y };
-return coordinates;]]></Body>
-				</Function>
-				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>VOID</ReturnModificator>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1656675119197</Id>
@@ -4096,7 +3742,7 @@ return coordinates;]]></Body>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[double[] dxdy = f_coordinates2position(p_latCoord, p_lonCoord);
+					<Body><![CDATA[double[] dxdy = model.f_coordinates2position(p_latCoord, p_lonCoord);
 double dx = dxdy[0];	
 double dy = dxdy[1];
 oval.setPos(dx, dy);
@@ -4131,7 +3777,7 @@ text.setPos(dx-5, dy-5);
 			<ContainerLinks>
 				<ContainerLink>
 					<Id>1656677678918</Id>
-					<Name><![CDATA[main]]></Name>
+					<Name><![CDATA[model]]></Name>
 					<X>50</X><Y>-100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -4139,7 +3785,7 @@ text.setPos(dx-5, dy-5);
 					<ShowLabel>true</ShowLabel>
 					<ActiveObjectClass>
 						<PackageName><![CDATA[esdl_trainingmodel]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
+						<ClassName><![CDATA[Model]]></ClassName>
 					</ActiveObjectClass>
 				</ContainerLink>
 			</ContainerLinks>
@@ -4307,9 +3953,6 @@ text.setPos(dx-5, dy-5);
 			</Presentation>
 
 			<Parameters>			
-				<Parameter>
-					<ParameterName><![CDATA[p_importer]]></ParameterName>
-				</Parameter>
 			</Parameters>			
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
@@ -4329,225 +3972,6 @@ text.setPos(dx-5, dy-5);
 			<BypassInitialScreen>true</BypassInitialScreen>
 		</SimulationExperiment>	
 	</Experiments>
-	<JavaClasses>
-		<!--   =========   Java Class   ========  -->
-		<JavaClass>
-			<Id>1656320323948</Id>
-			<Name><![CDATA[ESDLImporter]]></Name>
-			<Text><![CDATA[// --- ESDL JAVA IMPORTER --- //
-
-
-// Import packages
-import java.io.IOException;
-import java.util.HashMap;
-
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.xmi.XMIResource;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-
-import esdl.Area;
-import esdl.Asset;
-import esdl.BiomassHeater;
-import esdl.Building;
-import esdl.BuildingUnit;
-import esdl.ElectricityNetwork;
-import esdl.EnergySystem;
-import esdl.EsdlPackage;
-import esdl.HeatNetwork;
-import esdl.HeatPump;
-import esdl.HeatStorage;
-import esdl.HeatingDemand;
-import esdl.Instance;
-import esdl.PVPanel;
-
-public class ESDLImporter {
-	
-	// Create list of imported assets from AnyLogic
-	ArrayList<Building> c_building = new ArrayList<Building>();
-	ArrayList<BuildingUnit> c_buildingUnits = new ArrayList<BuildingUnit>();
-	ArrayList<ElectricityNetwork> c_electricityNetworks = new ArrayList<ElectricityNetwork>();
-	ArrayList<HeatNetwork> c_heatNetworks = new ArrayList<HeatNetwork>();
-	ArrayList<HeatStorage> c_heatStorages = new ArrayList<HeatStorage>();
-	ArrayList<HeatingDemand> c_heatingDemands = new ArrayList<HeatingDemand>();
-	ArrayList<HeatPump> c_heatPumps = new ArrayList<HeatPump>();
-	ArrayList<PVPanel> c_pvPanels = new ArrayList<PVPanel>();
-	ArrayList<BiomassHeater> c_biomassPlant = new ArrayList<BiomassHeater>();
-	
-	
-	/***
-	 * Constructor: Aim of this script is to print a message about every asset in
-	 * the ESDL file.
-	 * 
-	 * @param esdlFileName
-	 * @throws IOException
-	 */
-	
-	public ESDLImporter(String esdlFileName) throws IOException {
-
-		System.out.println("Loading ESDL from file: " + esdlFileName);
-
-		// Load ESDL File into the EnergySystem object
-		EnergySystem energySystem = (EnergySystem) loadEcoreResource(esdlFileName);
-
-		// @formatter:off
-		//
-		// ESDL Structure:
-		// ---------------
-		// Energy System
-		// |- Energy System Instance
-		// 		|- Area
-		// 			|- Sub-area/Building (Optional)
-		// 				|- Assets (PV Panels, Demands, etc.)
-		// 			|- Assets (PV Panels, Demands, etc.)
-		// Start from outermost elements and work your way in
-		//
-		// @formatter:on
-
-		// Grab all instances of the EnergySystem
-		EList<Instance> instances = energySystem.getInstance();
-		for (Instance instance : instances) {
-			if (instance != null) {
-				//System.out.println("Processing instance with id: " + instance.getId());
-				// Each instance has a root area
-				Area area = instance.getArea();
-				if (area != null) {
-					// Process this area recursively (and print the asset indented accordingly)
-					processAssetsInArea(1, area);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Process assets in an area. Remember that an area can contain sub-areas
-	 * 
-	 * @param indent
-	 *            How many spaces to indent printing of the assets in this area by
-	 * @param area
-	 *            Area object to process
-	 */
-	public void processAssetsInArea(int indent, Area area) {
-
-		// For each sub-area (if any) in Area, process assets
-		for (Area subArea : area.getArea()) {
-			processAssetsInArea(indent + 1, subArea);
-		}
-
-		// Process assets contained in this area
-		processAssets(indent + 1, area.getAsset());
-	}
-
-	/***
-	 * Process assets from a list of assets. EList is an ECore wrapper around a Java
-	 * list, so you can use normal list functions.
-	 * 
-	 * @param indent
-	 *            How many spaces to indent printing of the assets in this area by
-	 * @param assets
-	 *            List of assets
-	 */
-	public void processAssets(int indent, EList<Asset> assets) {
-
-		// For all assets that are imported in list, do:
-		for (Asset asset : assets) {
-			
-			// If the asset is a building, it may contain assets inside of it.
-			// So recursively process the assets inside this building (if any) first.
-			if (asset instanceof Building) {
-				Building building = (Building) asset;
-				c_building.add(building);
-			}
-			// If asset is a building unit, the same rule as with buildings apply.
-			// Recursively process the assets inside this building unit (if any).
-			else if (asset instanceof BuildingUnit) {
-				BuildingUnit buildingUnit = (BuildingUnit) asset;
-				c_buildingUnits.add(buildingUnit);
-
-				processAssets(indent + 1, buildingUnit.getAsset());
-			}
-			
-			// For all other assets, do:
-			else if (asset instanceof ElectricityNetwork) {
-				ElectricityNetwork electricityNetwork = (ElectricityNetwork) asset;
-				c_electricityNetworks.add(electricityNetwork);
-			}
-			
-			else if (asset instanceof HeatNetwork) {
-				HeatNetwork heatNetwork = (HeatNetwork) asset;
-				c_heatNetworks.add(heatNetwork);
-			}
-			
-			else if (asset instanceof HeatStorage) {
-				HeatStorage heatStorage = (HeatStorage) asset;
-				c_heatStorages.add(heatStorage);
-			}
-			
-			else if (asset instanceof HeatingDemand) {
-				HeatingDemand heatingDemand = (HeatingDemand) asset;
-				c_heatingDemands.add(heatingDemand);
-			}
-			
-			else if (asset instanceof HeatPump) {
-				HeatPump heatPump = (HeatPump) asset;
-				c_heatPumps.add(heatPump);
-			}
-			
-			else if (asset instanceof PVPanel) {
-				PVPanel pvPanel = (PVPanel) asset;
-				c_pvPanels.add(pvPanel);
-			}
-			
-			else if (asset instanceof BiomassHeater) {
-				BiomassHeater biomassPlant = (BiomassHeater) asset;
-				c_biomassPlant.add(biomassPlant);
-			}
-			
-			else {
-				String assetClass = asset.getClass().getInterfaces()[0].getSimpleName();
-				// Remaning assets that are not imported are printed (this code can also be switched off):
-				String message = "Found Asset of type " + assetClass + " with id: " + asset.getId();
-				System.out.print(message);
-			}
-		}
-	}
-
-	/***
-	 * 
-	 * Function to load ESDL file into an EnergySystem object.
-	 * 
-	 * @param <T>
-	 *            Type of ECore object at the root of the XML (In our case, this is
-	 *            EnergySystem)
-	 * @param filepath
-	 *            Path to ESDL File
-	 * @return ECore object of type T (i.e, EnergySystem)
-	 * @throws IOException
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends EObject> T loadEcoreResource(String filepath) throws IOException {
-		EsdlPackage.eINSTANCE.eClass();
-		URI fileURI = URI.createFileURI(filepath);
-		XMIResourceImpl resource = new XMIResourceImpl(fileURI);
-		resource.getDefaultLoadOptions().put(XMIResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
-		resource.setIntrinsicIDToEObjectMap(new HashMap<String, EObject>());
-		resource.load(null);
-		return (T) resource.getContents().get(0);
-	}
-
-	/***
-	 * Main method
-	 * 
-	 * @param args
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws IOException {
-	}
-	
-}]]></Text>
-		</JavaClass>
-	</JavaClasses>
 	<ModelResources>
 		<Resource>
 			<Path><![CDATA[esdl-2.21.12.jar]]></Path>
@@ -4563,14 +3987,6 @@ public class ESDLImporter {
 		</Resource>
 		<Resource>
 			<Path><![CDATA[org.eclipse.emf.ecore-2.23.0.jar]]></Path>
-			<ReferencedFromUserCode>false</ReferencedFromUserCode>
-		</Resource>
-		<Resource>
-			<Path><![CDATA[image1.png]]></Path>
-			<ReferencedFromUserCode>false</ReferencedFromUserCode>
-		</Resource>
-		<Resource>
-			<Path><![CDATA[image2.png]]></Path>
 			<ReferencedFromUserCode>false</ReferencedFromUserCode>
 		</Resource>
 	</ModelResources>
