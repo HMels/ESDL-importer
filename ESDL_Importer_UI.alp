@@ -26,12 +26,7 @@ import esdl.Geometry;
 import esdl.HeatingDemand;
 import esdl.BiomassHeater;
 import esdl.HeatPump;]]></Import>
-			<StartupCode><![CDATA[try {
-	p_importer = new ESDLImporter("Apeldoorn_Noord_Case.esdl");
-}
-catch(IOException e){
-	traceln(e);
-}]]></StartupCode>
+			<StartupCode><![CDATA[f_startupcode();]]></StartupCode>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1658228748817</Id>
@@ -128,9 +123,11 @@ catch(IOException e){
 				<Variable Class="PlainVariable">
 					<Id>1658228848032</Id>
 					<Name><![CDATA[v_coordinateLine_bottomcoordinates]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>690</X><Y>70</Y>
+					<Description><![CDATA[@HMels
+@14/07/2022
+
+The coordinates of the bottom of the reference line]]></Description>
+					<X>190</X><Y>-260</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -145,9 +142,11 @@ catch(IOException e){
 				<Variable Class="PlainVariable">
 					<Id>1658228848034</Id>
 					<Name><![CDATA[v_coordinateLine_top_coordinates]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>690</X><Y>50</Y>
+					<Description><![CDATA[@HMels
+@14/07/2022
+
+The coordinates of the top of the reference line]]></Description>
+					<X>190</X><Y>-280</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -159,29 +158,6 @@ catch(IOException e){
 						</InitialValue>
 					</Properties>
 				</Variable>
-				<Variable Class="Parameter">
-					<Id>1658230315468</Id>
-					<Name><![CDATA[p_importer]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>690</X><Y>20</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[ESDLImporter]]></Type>
-						<UnitType><![CDATA[NONE]]></UnitType>
-						<SdArray>false</SdArray>
-						<ParameterEditor>
-							<Id>1658230315466</Id>
-							<EditorContolType>TEXT_BOX</EditorContolType>
-							<MinSliderValue><![CDATA[0]]></MinSliderValue>
-							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
-							<DelimeterType>NO_DELIMETER</DelimeterType>
-						</ParameterEditor>
-					</Properties>                 
-				</Variable>
 			</Variables>
 			<Functions>
 				<Function AccessType="default" StaticFunction="false">
@@ -192,8 +168,8 @@ catch(IOException e){
 					<Description><![CDATA[@HMels
 @02-06-2022
 
-takes the longitude and latitude of a household or industry, and couples this to a polyshape and a building]]></Description>
-					<X>690</X><Y>90</Y>
+takes the latitude and longitude as input and maps the coordinates onto the image]]></Description>
+					<X>190</X><Y>-240</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -231,6 +207,308 @@ double lat_y = ( lat - min_point_lat )*dy/dlat + y;
 double[] coordinates = { lon_x, lat_y };
 return coordinates;]]></Body>
 				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658313470425</Id>
+					<Name><![CDATA[f_startupcode]]></Name>
+					<Description><![CDATA[@HMels
+@19/07/2022
+
+Code which will be executed on startup]]></Description>
+					<X>190</X><Y>-170</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Body><![CDATA[// functies ophalen
+f_buildingImporter();
+f_heatNetworkImporter();
+f_heatStorageImporter();
+f_heatingDemandImporter();
+f_heatPumpImporter();
+f_biomassPlantImporter();]]></Body>
+				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658315857816</Id>
+					<Name><![CDATA[f_buildingImporter]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Creates UI for all building agents]]></Description>
+					<X>190</X><Y>-140</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Body><![CDATA[// BUILDING
+// Create the agents first
+model.f_buildingImporter();
+
+// write codes of individual buildings
+for (A_Building b : model.c_buildings) {
+	// Create UI
+	S_Building newBuildingUI = add_shapeBuildings();
+	newBuildingUI.p_buildingESDL = b.p_buildingESDL;
+	newBuildingUI.p_buildingAgent = b;
+	newBuildingUI.f_getPolygon();
+	model.c_pointsPerBuilding.add(newBuildingUI.c_pointCollection);	
+}
+]]></Body>
+				</Function>
+				<Function AccessType="public" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658320693937</Id>
+					<Name><![CDATA[f_heatNetworkImporter]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Creates UI for all heat network agents]]></Description>
+					<X>190</X><Y>-120</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Body><![CDATA[//HEAT NETWORK
+// Create the agents first
+model.f_heatNetworkImporter();
+
+// write codes of individual buildings
+for (A_HeatNetwork hn : model.c_heatNetworks) {
+	// Create UI
+	S_HeatNetwork newHeatNetworkUI = add_shapeHeatNetworks();
+	newHeatNetworkUI.p_heatNetworkESDL = hn.p_heatNetworkESDL;
+	newHeatNetworkUI.p_heatNetworkAgent = hn;
+	newHeatNetworkUI.f_getPoint();
+}]]></Body>
+				</Function>
+				<Function AccessType="public" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658320693940</Id>
+					<Name><![CDATA[f_heatStorageImporter]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Creates UI for all heat storage agents]]></Description>
+					<X>190</X><Y>-100</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Body><![CDATA[//HEAT STORAGE
+// Create the agents first
+model.f_heatStorageImporter();
+
+// write codes of individual buildings
+for (A_HeatStorage hs : model.c_heatStorages) {
+	// Create UI
+	S_HeatStorage newHeatStorageUI = add_shapeHeatStorages();
+	newHeatStorageUI.p_heatStorageESDL = hs.p_heatStorageESDL;
+	newHeatStorageUI.p_heatStorageAgent = hs;
+	newHeatStorageUI.f_getPoint();
+}]]></Body>
+				</Function>
+				<Function AccessType="public" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658320693942</Id>
+					<Name><![CDATA[f_heatingDemandImporter]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Creates UI for all heating demand agents]]></Description>
+					<X>190</X><Y>-80</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Body><![CDATA[//HEAT DEMAND
+// Create the agents first
+model.f_heatingDemandImporter();
+
+// write codes of individual buildings
+for (A_HeatingDemand hd : model.c_heatingDemands) {
+	// Create UI
+	S_HeatingDemand newHeatingDemandUI = add_shapeHeatingDemands();
+	newHeatingDemandUI.p_heatingDemandESDL = hd.p_heatingDemandESDL;
+	newHeatingDemandUI.p_heatingDemandAgent = hd;
+	newHeatingDemandUI.f_getPoint();
+}]]></Body>
+				</Function>
+				<Function AccessType="public" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658320693944</Id>
+					<Name><![CDATA[f_heatPumpImporter]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Creates UI for all heat pump agents]]></Description>
+					<X>190</X><Y>-60</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Body><![CDATA[//HEAT DEMAND
+// Create the agents first
+model.f_heatPumpImporter();
+
+// write codes of individual buildings
+for (A_HeatPump hp : model.c_heatPumps) {
+	// Create UI
+	S_HeatPump newHeatPumpUI = add_shapeHeatPumps();
+	newHeatPumpUI.p_heatPumpESDL = hp.p_heatPumpESDL;
+	newHeatPumpUI.p_heatPumpAgent = hp;
+	newHeatPumpUI.f_getPoint();
+}]]></Body>
+				</Function>
+				<Function AccessType="public" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658320693946</Id>
+					<Name><![CDATA[f_biomassPlantImporter]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Create agents for all biomass plants]]></Description>
+					<X>190</X><Y>-40</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Body><![CDATA[// BIOMASS PLANT
+// Create the agents first
+model.f_biomassPlantImporter();
+
+// write codes of individual buildings
+for (A_BiomassPlant bm : model.c_biomassPlants) {
+	// Create UI
+	S_BiomassPlant newBiomassPlantUI = add_shapeBiomassPlants();
+	newBiomassPlantUI.p_biomassPlantESDL = bm.p_biomassPlantESDL;
+	newBiomassPlantUI.p_biomassPlantAgent = bm;
+	newBiomassPlantUI.f_getPoint();
+}
+]]></Body>
+				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658332118352</Id>
+					<Name><![CDATA[f_onClickBuilding]]></Name>
+					<Description><![CDATA[@HMels
+@20/07/22
+
+Defines what happens when a shape is clicked on]]></Description>
+					<X>560</X><Y>-140</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Parameter>
+						<Name><![CDATA[shape]]></Name>
+						<Type><![CDATA[ShapePolyLine]]></Type>
+					</Parameter>
+					<Body><![CDATA[shape.setFillColor(crimson);]]></Body>
+				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658332163601</Id>
+					<Name><![CDATA[f_onClickHeatNetworks]]></Name>
+					<Description><![CDATA[@HMels
+@20/07/22
+
+Defines what happens when a shape is clicked on]]></Description>
+					<X>560</X><Y>-120</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Parameter>
+						<Name><![CDATA[shape]]></Name>
+						<Type><![CDATA[Shape]]></Type>
+					</Parameter>
+				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658332166970</Id>
+					<Name><![CDATA[f_onClickHeatStorage]]></Name>
+					<Description><![CDATA[@HMels
+@20/07/22
+
+Defines what happens when a shape is clicked on]]></Description>
+					<X>560</X><Y>-100</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Parameter>
+						<Name><![CDATA[shape]]></Name>
+						<Type><![CDATA[Shape]]></Type>
+					</Parameter>
+				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658332169400</Id>
+					<Name><![CDATA[f_onClickHeatingDemands]]></Name>
+					<Description><![CDATA[@HMels
+@20/07/22
+
+Defines what happens when a shape is clicked on]]></Description>
+					<X>560</X><Y>-80</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Parameter>
+						<Name><![CDATA[shape]]></Name>
+						<Type><![CDATA[Shape]]></Type>
+					</Parameter>
+				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658332172931</Id>
+					<Name><![CDATA[f_onClickHeatPumps]]></Name>
+					<Description><![CDATA[@HMels
+@20/07/22
+
+Defines what happens when a shape is clicked on]]></Description>
+					<X>560</X><Y>-60</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Parameter>
+						<Name><![CDATA[shape]]></Name>
+						<Type><![CDATA[Shape]]></Type>
+					</Parameter>
+				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658332175481</Id>
+					<Name><![CDATA[f_onClickBiomassPlant]]></Name>
+					<Description><![CDATA[@HMels
+@20/07/22
+
+Defines what happens when a shape is clicked on]]></Description>
+					<X>560</X><Y>-40</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Parameter>
+						<Name><![CDATA[shape]]></Name>
+						<Type><![CDATA[Shape]]></Type>
+					</Parameter>
+				</Function>
 			</Functions>
 			<AgentLinks>
 				<AgentLink>
@@ -258,7 +536,11 @@ return coordinates;]]></Body>
 				<EmbeddedObject>
 					<Id>1658229123232</Id>
 					<Name><![CDATA[shapeHeatNetworks]]></Name>
-					<X>690</X><Y>130</Y>
+					<Description><![CDATA[@HMels
+@19/07/2022
+
+The shape of the Heat Network agent. These need to be loaded before drawing the actual shapes]]></Description>
+					<X>365</X><Y>-120</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -284,6 +566,9 @@ return coordinates;]]></Body>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[p_lonCoord]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[p_heatNetworkAgent]]></Name>
 						</Parameter>
 					</Parameters>
 					<ReplicationFlag>true</ReplicationFlag>
@@ -329,7 +614,11 @@ return coordinates;]]></Body>
 				<EmbeddedObject>
 					<Id>1658229218885</Id>
 					<Name><![CDATA[shapeHeatingDemands]]></Name>
-					<X>690</X><Y>150</Y>
+					<Description><![CDATA[@HMels
+@19/07/2022
+
+The shape of the Heat Demand agent. These need to be loaded before drawing the actual shapes]]></Description>
+					<X>365</X><Y>-80</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -355,6 +644,9 @@ return coordinates;]]></Body>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[p_lonCoord]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[p_heatingDemandAgent]]></Name>
 						</Parameter>
 					</Parameters>
 					<ReplicationFlag>true</ReplicationFlag>
@@ -400,7 +692,11 @@ return coordinates;]]></Body>
 				<EmbeddedObject>
 					<Id>1658229309850</Id>
 					<Name><![CDATA[shapeBuildings]]></Name>
-					<X>690</X><Y>170</Y>
+					<Description><![CDATA[@HMels
+@19/07/2022
+
+The shape of the Buildings agent. These need to be loaded before drawing the actual shapes]]></Description>
+					<X>365</X><Y>-140</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -422,16 +718,7 @@ return coordinates;]]></Body>
 							<Name><![CDATA[p_buildingESDL]]></Name>
 						</Parameter>
 						<Parameter>
-							<Name><![CDATA[p_floorArea]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[p_buildingYear]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[p_BAG_ID]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[p_buildingType]]></Name>
+							<Name><![CDATA[p_buildingAgent]]></Name>
 						</Parameter>
 					</Parameters>
 					<ReplicationFlag>true</ReplicationFlag>
@@ -477,7 +764,11 @@ return coordinates;]]></Body>
 				<EmbeddedObject>
 					<Id>1658229415648</Id>
 					<Name><![CDATA[shapeBiomassPlants]]></Name>
-					<X>690</X><Y>190</Y>
+					<Description><![CDATA[@HMels
+@19/07/2022
+
+The shape of the Biomass Plant agent. These need to be loaded before drawing the actual shapes]]></Description>
+					<X>365</X><Y>-40</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -499,13 +790,13 @@ return coordinates;]]></Body>
 							<Name><![CDATA[p_biomassPlantESDL]]></Name>
 						</Parameter>
 						<Parameter>
-							<Name><![CDATA[p_powerBiomassPlant]]></Name>
-						</Parameter>
-						<Parameter>
 							<Name><![CDATA[p_latCoord]]></Name>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[p_lonCoord]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[p_biomassPlantAgent]]></Name>
 						</Parameter>
 					</Parameters>
 					<ReplicationFlag>true</ReplicationFlag>
@@ -551,7 +842,11 @@ return coordinates;]]></Body>
 				<EmbeddedObject>
 					<Id>1658229479464</Id>
 					<Name><![CDATA[shapeHeatPumps]]></Name>
-					<X>690</X><Y>210</Y>
+					<Description><![CDATA[@HMels
+@19/07/2022
+
+The shape of the Heat Pump agent. These need to be loaded before drawing the actual shapes]]></Description>
+					<X>365</X><Y>-60</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -573,13 +868,13 @@ return coordinates;]]></Body>
 							<Name><![CDATA[p_heatPumpESDL]]></Name>
 						</Parameter>
 						<Parameter>
-							<Name><![CDATA[p_powerHeatPump]]></Name>
-						</Parameter>
-						<Parameter>
 							<Name><![CDATA[p_latCoord]]></Name>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[p_lonCoord]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[p_heatPumpAgent]]></Name>
 						</Parameter>
 					</Parameters>
 					<ReplicationFlag>true</ReplicationFlag>
@@ -625,7 +920,11 @@ return coordinates;]]></Body>
 				<EmbeddedObject>
 					<Id>1658229547650</Id>
 					<Name><![CDATA[shapeHeatStorages]]></Name>
-					<X>690</X><Y>230</Y>
+					<Description><![CDATA[@HMels
+@19/07/2022
+
+The shape of the Heat Storage agent. These need to be loaded before drawing the actual shapes]]></Description>
+					<X>365</X><Y>-100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -647,13 +946,13 @@ return coordinates;]]></Body>
 							<Name><![CDATA[p_heatStorageESDL]]></Name>
 						</Parameter>
 						<Parameter>
-							<Name><![CDATA[p_capacity]]></Name>
-						</Parameter>
-						<Parameter>
 							<Name><![CDATA[p_latCoord]]></Name>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[p_lonCoord]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[p_heatStorageAgent]]></Name>
 						</Parameter>
 					</Parameters>
 					<ReplicationFlag>true</ReplicationFlag>
@@ -699,7 +998,11 @@ return coordinates;]]></Body>
 				<EmbeddedObject>
 					<Id>1658230378441</Id>
 					<Name><![CDATA[model]]></Name>
-					<X>540</X><Y>-30</Y>
+					<Description><![CDATA[@HMels
+@19/07/2022
+
+The underlying model. Contains all the agents and their behaviour]]></Description>
+					<X>190</X><Y>-190</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -717,6 +1020,9 @@ return coordinates;]]></Body>
 						</GenericParameterSubstituteReference>
 					</GenericParameterSubstitute>
 					<Parameters>
+						<Parameter>
+							<Name><![CDATA[p_importer]]></Name>
+						</Parameter>
 					</Parameters>
 					<ReplicationFlag>false</ReplicationFlag>
 					<Replication Class="CodeValue">
@@ -955,6 +1261,138 @@ rb: 52.24943868893129, 6.002588818254775]]></Description>
 					<Latitude>0.0</Latitude>
 					<Longitude>0.0</Longitude>
 				</EmbeddedObjectPresentation>
+				<RoundedRectangle>
+					<Id>1658331674757</Id>
+					<Name><![CDATA[roundRectangle]]></Name>
+					<X>170</X><Y>-210</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>360</Width>
+					<Height>190</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
+					<FillMaterial>null</FillMaterial>
+					<ArcRadius>10</ArcRadius>
+				</RoundedRectangle>
+				<Text>
+					<Id>1658331674768</Id>
+					<Name><![CDATA[text]]></Name>
+					<X>330</X><Y>-190</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[ESDL Importer]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>18</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<RoundedRectangle>
+					<Id>1658331719632</Id>
+					<Name><![CDATA[roundRectangle1]]></Name>
+					<X>170</X><Y>-330</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>240</Width>
+					<Height>110</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
+					<FillMaterial>null</FillMaterial>
+					<ArcRadius>10</ArcRadius>
+				</RoundedRectangle>
+				<Text>
+					<Id>1658331719634</Id>
+					<Name><![CDATA[text1]]></Name>
+					<X>200</X><Y>-320</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[Coordinate Mapper]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>18</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<RoundedRectangle>
+					<Id>1658331870637</Id>
+					<Name><![CDATA[roundRectangle2]]></Name>
+					<X>540</X><Y>-210</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>190</Width>
+					<Height>190</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
+					<FillMaterial>null</FillMaterial>
+					<ArcRadius>10</ArcRadius>
+				</RoundedRectangle>
+				<Text>
+					<Id>1658331870650</Id>
+					<Name><![CDATA[text2]]></Name>
+					<X>570</X><Y>-190</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[Interaction model]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>18</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
 			</Presentation>
 
 				</Level>
@@ -1065,7 +1503,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229090829</Id>
 					<Name><![CDATA[p_heatNetworkESDL]]></Name>
-					<X>60</X><Y>50</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+The imported heat network from ESDL (ESDL type)]]></Description>
+					<X>30</X><Y>60</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1086,7 +1528,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229090832</Id>
 					<Name><![CDATA[p_latCoord]]></Name>
-					<X>290</X><Y>80</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Latitude of the heat network]]></Description>
+					<X>30</X><Y>150</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1107,7 +1553,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229090835</Id>
 					<Name><![CDATA[p_lonCoord]]></Name>
-					<X>290</X><Y>110</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Longitude of the heat network]]></Description>
+					<X>30</X><Y>170</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1125,14 +1575,43 @@ import esdl.Geometry;]]></Import>
 						</ParameterEditor>
 					</Properties>                 
 				</Variable>
+				<Variable Class="Parameter">
+					<Id>1658326186070</Id>
+					<Name><![CDATA[p_heatNetworkAgent]]></Name>
+					<Description><![CDATA[@HMels
+@20/07/2022
+
+reference to to corresponding agent (anylogic type)]]></Description>
+					<X>30</X><Y>80</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[A_HeatNetwork]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<ParameterEditor>
+							<Id>1658326186068</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
 			</Variables>
 			<Functions>
 				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>VOID</ReturnModificator>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1658229090822</Id>
-					<Name><![CDATA[f_loadHeatNetwork]]></Name>
-					<X>60</X><Y>80</Y>
+					<Name><![CDATA[f_getPoint]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Import the heat network representation]]></Description>
+					<X>30</X><Y>110</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1151,7 +1630,11 @@ f_drawPoint();]]></Body>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1658229090824</Id>
 					<Name><![CDATA[f_drawPoint]]></Name>
-					<X>60</X><Y>140</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Drawing the heat network]]></Description>
+					<X>30</X><Y>130</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1225,6 +1708,7 @@ text.setPos(dx-5, dy-5);
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<OnClickCode><![CDATA[model_UI.f_onClickHeatNetworks(self);]]></OnClickCode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>10</ZHeight>
@@ -1255,6 +1739,50 @@ text.setPos(dx-5, dy-5);
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<RoundedRectangle>
+					<Id>1658331573416</Id>
+					<Name><![CDATA[roundRectangle]]></Name>
+					<X>10</X><Y>10</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>170</Width>
+					<Height>180</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
+					<FillMaterial>null</FillMaterial>
+					<ArcRadius>10</ArcRadius>
+				</RoundedRectangle>
+				<Text>
+					<Id>1658331573418</Id>
+					<Name><![CDATA[text1]]></Name>
+					<X>30</X><Y>20</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[ESDL Importer]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>18</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -1383,7 +1911,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229195120</Id>
 					<Name><![CDATA[p_heatingDemandESDL]]></Name>
-					<X>80</X><Y>60</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+The imported biomass plant from ESDL (ESDL type)]]></Description>
+					<X>30</X><Y>60</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1404,7 +1936,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229195123</Id>
 					<Name><![CDATA[p_latCoord]]></Name>
-					<X>330</X><Y>60</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Longitude of the heating demand]]></Description>
+					<X>30</X><Y>150</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1425,7 +1961,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229195126</Id>
 					<Name><![CDATA[p_lonCoord]]></Name>
-					<X>330</X><Y>90</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Longitude of the Heating demand]]></Description>
+					<X>30</X><Y>170</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1443,14 +1983,43 @@ import esdl.Geometry;]]></Import>
 						</ParameterEditor>
 					</Properties>                 
 				</Variable>
+				<Variable Class="Parameter">
+					<Id>1658324853033</Id>
+					<Name><![CDATA[p_heatingDemandAgent]]></Name>
+					<Description><![CDATA[@HMels
+@20/07/2022
+
+reference to to corresponding agent (anylogic type)]]></Description>
+					<X>30</X><Y>80</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[A_HeatingDemand]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<ParameterEditor>
+							<Id>1658324853031</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
 			</Variables>
 			<Functions>
 				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>VOID</ReturnModificator>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1658229195113</Id>
-					<Name><![CDATA[f_loadHeatingDemand]]></Name>
-					<X>80</X><Y>90</Y>
+					<Name><![CDATA[f_getPoint]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Import the biomass plant representation]]></Description>
+					<X>30</X><Y>110</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1469,7 +2038,11 @@ f_drawPoint();]]></Body>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1658229195115</Id>
 					<Name><![CDATA[f_drawPoint]]></Name>
-					<X>80</X><Y>150</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Drawing the biomass plant]]></Description>
+					<X>30</X><Y>130</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1543,6 +2116,7 @@ text.setPos(dx-5, dy-5);
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<OnClickCode><![CDATA[model_UI.f_onClickHeatingDemands(self);]]></OnClickCode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>10</ZHeight>
@@ -1573,6 +2147,50 @@ text.setPos(dx-5, dy-5);
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<RoundedRectangle>
+					<Id>1658331556048</Id>
+					<Name><![CDATA[roundRectangle]]></Name>
+					<X>10</X><Y>10</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>170</Width>
+					<Height>180</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
+					<FillMaterial>null</FillMaterial>
+					<ArcRadius>10</ArcRadius>
+				</RoundedRectangle>
+				<Text>
+					<Id>1658331556050</Id>
+					<Name><![CDATA[text1]]></Name>
+					<X>30</X><Y>20</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[ESDL Importer]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>18</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -1710,8 +2328,10 @@ import org.eclipse.emf.common.util.EList;]]></Import>
 					<Id>1658229298405</Id>
 					<Name><![CDATA[p_buildingESDL]]></Name>
 					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>410</X><Y>30</Y>
+@14/07/2022
+
+Reference to the ESDL ]]></Description>
+					<X>30</X><Y>150</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1730,138 +2350,38 @@ import org.eclipse.emf.common.util.EList;]]></Import>
 					</Properties>                 
 				</Variable>
 				<Variable Class="Parameter">
-					<Id>1658229298408</Id>
-					<Name><![CDATA[p_floorArea]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>410</X><Y>60</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[double]]></Type>
-						<UnitType><![CDATA[NONE]]></UnitType>
-						<SdArray>false</SdArray>
-						<ParameterEditor>
-							<Id>1658229298406</Id>
-							<Label><![CDATA[p_floorArea]]></Label>
-							<EditorContolType>TEXT_BOX</EditorContolType>
-							<MinSliderValue><![CDATA[0]]></MinSliderValue>
-							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
-							<DelimeterType>NO_DELIMETER</DelimeterType>
-						</ParameterEditor>
-					</Properties>                 
-				</Variable>
-				<Variable Class="Parameter">
-					<Id>1658229298411</Id>
-					<Name><![CDATA[p_buildingYear]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>410</X><Y>90</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[double]]></Type>
-						<UnitType><![CDATA[NONE]]></UnitType>
-						<SdArray>false</SdArray>
-						<ParameterEditor>
-							<Id>1658229298409</Id>
-							<EditorContolType>TEXT_BOX</EditorContolType>
-							<MinSliderValue><![CDATA[0]]></MinSliderValue>
-							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
-							<DelimeterType>NO_DELIMETER</DelimeterType>
-						</ParameterEditor>
-					</Properties>                 
-				</Variable>
-				<Variable Class="Parameter">
-					<Id>1658229298414</Id>
-					<Name><![CDATA[p_BAG_ID]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>410</X><Y>120</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[String]]></Type>
-						<UnitType><![CDATA[NONE]]></UnitType>
-						<SdArray>false</SdArray>
-						<ParameterEditor>
-							<Id>1658229298412</Id>
-							<EditorContolType>TEXT_BOX</EditorContolType>
-							<MinSliderValue><![CDATA[0]]></MinSliderValue>
-							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
-							<DelimeterType>NO_DELIMETER</DelimeterType>
-						</ParameterEditor>
-					</Properties>                 
-				</Variable>
-				<Variable Class="Parameter">
-					<Id>1658229298417</Id>
-					<Name><![CDATA[p_buildingType]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>410</X><Y>150</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[String]]></Type>
-						<UnitType><![CDATA[NONE]]></UnitType>
-						<SdArray>false</SdArray>
-						<ParameterEditor>
-							<Id>1658229298415</Id>
-							<EditorContolType>TEXT_BOX</EditorContolType>
-							<MinSliderValue><![CDATA[0]]></MinSliderValue>
-							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
-							<DelimeterType>NO_DELIMETER</DelimeterType>
-						</ParameterEditor>
-					</Properties>                 
-				</Variable>
-				<Variable Class="CollectionVariable">
-					<Id>1658229298378</Id>
-					<Name><![CDATA[c_households]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>230</X><Y>60</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" AccessType="public" StaticVariable="false">
-						<CollectionClass><![CDATA[ArrayList]]></CollectionClass>
-						<ElementClass><![CDATA[BuildingUnit]]></ElementClass>
-						<ValueElementClass><![CDATA[String]]></ValueElementClass>
-					</Properties>
+					<Id>1658315681856</Id>
+					<Name><![CDATA[p_buildingAgent]]></Name>
+					<Description><![CDATA[@HMels
+@20/07/2022
 
-				</Variable>
-				<Variable Class="CollectionVariable">
-					<Id>1658229298380</Id>
-					<Name><![CDATA[c_industry]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>230</X><Y>90</Y>
+Reference to the building agent in model]]></Description>
+					<X>30</X><Y>170</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" AccessType="public" StaticVariable="false">
-						<CollectionClass><![CDATA[ArrayList]]></CollectionClass>
-						<ElementClass><![CDATA[BuildingUnit]]></ElementClass>
-						<ValueElementClass><![CDATA[String]]></ValueElementClass>
-					</Properties>
-
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[A_Building]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<ParameterEditor>
+							<Id>1658315681854</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
 				</Variable>
 				<Variable Class="CollectionVariable">
 					<Id>1658229298382</Id>
 					<Name><![CDATA[c_pointCollection]]></Name>
 					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>230</X><Y>30</Y>
+@14/07/2022
+
+Collection of the points in a polygon]]></Description>
+					<X>30</X><Y>120</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1873,133 +2393,23 @@ import org.eclipse.emf.common.util.EList;]]></Import>
 					</Properties>
 
 				</Variable>
-				<Variable Class="CollectionVariable">
-					<Id>1658229298384</Id>
-					<Name><![CDATA[c_pvPanelESDL]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>230</X><Y>120</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" AccessType="public" StaticVariable="false">
-						<CollectionClass><![CDATA[ArrayList]]></CollectionClass>
-						<ElementClass><![CDATA[PVPanel]]></ElementClass>
-						<ValueElementClass><![CDATA[String]]></ValueElementClass>
-					</Properties>
-
-				</Variable>
-				<Variable Class="CollectionVariable">
-					<Id>1658229298386</Id>
-					<Name><![CDATA[c_pvPanelAgent]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>230</X><Y>150</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" AccessType="public" StaticVariable="false">
-						<CollectionClass><![CDATA[ArrayList]]></CollectionClass>
-						<ElementClass><![CDATA[A_SolarPV]]></ElementClass>
-						<ValueElementClass><![CDATA[String]]></ValueElementClass>
-					</Properties>
-
-				</Variable>
-				<Variable Class="CollectionVariable">
-					<Id>1658229298388</Id>
-					<Name><![CDATA[c_buildingUnitESDL]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>230</X><Y>180</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" AccessType="public" StaticVariable="false">
-						<CollectionClass><![CDATA[ArrayList]]></CollectionClass>
-						<ElementClass><![CDATA[BuildingUnit]]></ElementClass>
-						<ValueElementClass><![CDATA[String]]></ValueElementClass>
-					</Properties>
-
-				</Variable>
 			</Variables>
 			<Functions>
-				<Function AccessType="default" StaticFunction="false">
-					<ReturnModificator>VOID</ReturnModificator>
-					<ReturnType><![CDATA[double]]></ReturnType>
-					<Id>1658229298390</Id>
-					<Name><![CDATA[f_loadBuildingData]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>40</X><Y>30</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[p_floorArea = p_buildingESDL.getFloorArea();
-p_buildingYear = p_buildingESDL.getBuildingYear();
-p_BAG_ID = p_buildingESDL.getId();
-BuildingTypeEnum buildingType = c_buildingUnitESDL.get(0).getType().get(0);
-
-
-p_buildingType = buildingType.getName();]]></Body>
-				</Function>
-				<Function AccessType="default" StaticFunction="false">
-					<ReturnModificator>VOID</ReturnModificator>
-					<ReturnType><![CDATA[double]]></ReturnType>
-					<Id>1658229298392</Id>
-					<Name><![CDATA[f_getHouseholdAssets]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>40</X><Y>180</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Parameter>
-						<Name><![CDATA[assetList]]></Name>
-						<Type><![CDATA[EList<Asset>]]></Type>
-					</Parameter>
-					<Body><![CDATA[//ArrayList<PVInstallation> pvCollection = new ArrayList<PVInstallation>();
-
-
-for (Asset asset : assetList) {
-	// If the asset is a building, it may contain assets inside of it.
-	// So recursively process the assets inside this building (if any) first.
-	if (asset instanceof BuildingUnit) {
-		BuildingUnit buildingUnit = (BuildingUnit) asset;
-		if (buildingUnit.getType().get(0).equals(BuildingTypeEnum.INDUSTRY)){
-			c_industry.add(buildingUnit);
-		}
-		//traceln(BuildingTypeEnum.)
-		
-		//if (buildingUnit.getType() == ){
-			//c_industry.add(buildingUnit);
-		//}
-		
-		//pvCollection.add(pvInstallation);
-	}
-}
-
-//c_PVCollection = pvCollection;]]></Body>
-				</Function>
 				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>VOID</ReturnModificator>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1658229298394</Id>
 					<Name><![CDATA[f_getPolygon]]></Name>
 					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>40</X><Y>120</Y>
+@14/07/2022
+
+Loads and creates the polygon]]></Description>
+					<X>30</X><Y>80</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[//traceln(p_buildingESDL.getGeometry());
-
-Geometry geometry = p_buildingESDL.getGeometry();
+					<Body><![CDATA[Geometry geometry = p_buildingESDL.getGeometry();
 if (geometry instanceof Polygon){
 	Polygon polygon = (Polygon) geometry;
 	SubPolygon exterior = polygon.getExterior();
@@ -2022,24 +2432,20 @@ else {
 					<Id>1658229298396</Id>
 					<Name><![CDATA[f_drawPolygon]]></Name>
 					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>40</X><Y>150</Y>
+@14/07/2022
+
+Draws the polygon]]></Description>
+					<X>30</X><Y>100</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[//ShapePolyLine polyline = new ShapePolyLine();
-
-polyline.setNPoints(c_pointCollection.size());
+					<Body><![CDATA[polyline.setNPoints(c_pointCollection.size());
 polyline.setLineColor(black);
 polyline.setFillColor(yellow);
 polyline.setVisible(true);
-//traceln(polyline.getY());
 
-//double zeroY = c_pointCollection.get(0).getLat();
-//double zeroX = c_pointCollection.get(0).getLon();
-
-for (int i=0	; i<c_pointCollection.size(); i++){
+for ( int i=0 ; i < c_pointCollection.size() ; i++ ){
 	double[] dxdy = model_UI.f_coordinates2position(c_pointCollection.get(i).getLat(), c_pointCollection.get(i).getLon());
 	double dx = dxdy[0];
 	double dy = dxdy[1];
@@ -2052,8 +2458,10 @@ for (int i=0	; i<c_pointCollection.size(); i++){
 					<Id>1658229298398</Id>
 					<Name><![CDATA[f_checkPresencePoints]]></Name>
 					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>40</X><Y>90</Y>
+@14/07/2022
+
+Checks if collection is empty]]></Description>
+					<X>30</X><Y>60</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2065,45 +2473,6 @@ for (int i=0	; i<c_pointCollection.size(); i++){
 					<Body><![CDATA[boolean filled = collection.isEmpty() ? false : true;
 
 return filled; ]]></Body>
-				</Function>
-				<Function AccessType="default" StaticFunction="false">
-					<ReturnModificator>VOID</ReturnModificator>
-					<ReturnType><![CDATA[double]]></ReturnType>
-					<Id>1658229298400</Id>
-					<Name><![CDATA[f_getBuildingAssets]]></Name>
-					<Description><![CDATA[@maartenbastiaansen
-@14/07/2022]]></Description>
-					<X>40</X><Y>210</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[//Clear collection in Importer
-model_UI.p_importer.c_pvPanels.clear();
-model_UI.p_importer.c_buildingUnits.clear();
-
-//Run function that collects the assets
-model_UI.p_importer.processAssets(1, p_buildingESDL.getAsset());
-
-
-//save collection of desired assets in agent
-c_pvPanelESDL = model_UI.p_importer.c_pvPanels;
-c_buildingUnitESDL = model_UI.p_importer.c_buildingUnits;
-
-//create agents based on that collection and save these agents here
-for (PVPanel p : c_pvPanelESDL){
-	c_pvPanelAgent.add(model.add_solarPVs());
-}
-
-
-for (BuildingUnit bu : c_buildingUnitESDL){
-	if (bu.getType().get(0) == BuildingTypeEnum.RESIDENTIAL){
-		c_households.add(bu);
-	}
-	else {
-		c_industry.add(bu);
-	}
-}]]></Body>
 				</Function>
 			</Functions>
 			<AgentLinks>
@@ -2167,7 +2536,7 @@ for (BuildingUnit bu : c_buildingUnitESDL){
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<OnClickCode><![CDATA[self.setFillColor(crimson);
+					<OnClickCode><![CDATA[model_UI.f_onClickBuilding(self);
 ]]></OnClickCode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
@@ -2191,6 +2560,50 @@ for (BuildingUnit bu : c_buildingUnitESDL){
 					</Points>
 					<Closed>true</Closed>
 				</Polyline>
+				<RoundedRectangle>
+					<Id>1658331517265</Id>
+					<Name><![CDATA[roundRectangle]]></Name>
+					<X>10</X><Y>10</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>170</Width>
+					<Height>180</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
+					<FillMaterial>null</FillMaterial>
+					<ArcRadius>10</ArcRadius>
+				</RoundedRectangle>
+				<Text>
+					<Id>1658331517267</Id>
+					<Name><![CDATA[text]]></Name>
+					<X>30</X><Y>20</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[ESDL Importer]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>18</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
 			</Presentation>
 
 				</Level>
@@ -2315,7 +2728,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229395172</Id>
 					<Name><![CDATA[p_biomassPlantESDL]]></Name>
-					<X>50</X><Y>50</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+The imported biomass plant from ESDL (ESDL type)]]></Description>
+					<X>30</X><Y>60</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2334,30 +2751,13 @@ import esdl.Geometry;]]></Import>
 					</Properties>                 
 				</Variable>
 				<Variable Class="Parameter">
-					<Id>1658229395175</Id>
-					<Name><![CDATA[p_powerBiomassPlant]]></Name>
-					<X>260</X><Y>170</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[double]]></Type>
-						<UnitType><![CDATA[NONE]]></UnitType>
-						<SdArray>false</SdArray>
-						<ParameterEditor>
-							<Id>1658229395173</Id>
-							<EditorContolType>TEXT_BOX</EditorContolType>
-							<MinSliderValue><![CDATA[0]]></MinSliderValue>
-							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
-							<DelimeterType>NO_DELIMETER</DelimeterType>
-						</ParameterEditor>
-					</Properties>                 
-				</Variable>
-				<Variable Class="Parameter">
 					<Id>1658229395178</Id>
 					<Name><![CDATA[p_latCoord]]></Name>
-					<X>260</X><Y>110</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Latitude of the biomass plant]]></Description>
+					<X>30</X><Y>150</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2378,7 +2778,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229395181</Id>
 					<Name><![CDATA[p_lonCoord]]></Name>
-					<X>260</X><Y>140</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Longitude of the biomass plant]]></Description>
+					<X>30</X><Y>170</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2396,35 +2800,43 @@ import esdl.Geometry;]]></Import>
 						</ParameterEditor>
 					</Properties>                 
 				</Variable>
+				<Variable Class="Parameter">
+					<Id>1658324622027</Id>
+					<Name><![CDATA[p_biomassPlantAgent]]></Name>
+					<Description><![CDATA[@HMels
+@20/07/2022
+
+reference to to corresponding agent (anylogic type)]]></Description>
+					<X>30</X><Y>80</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[A_BiomassPlant]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<ParameterEditor>
+							<Id>1658324622025</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
 			</Variables>
 			<Functions>
 				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>VOID</ReturnModificator>
 					<ReturnType><![CDATA[double]]></ReturnType>
-					<Id>1658229395165</Id>
-					<Name><![CDATA[f_loadBiomassData]]></Name>
-					<X>50</X><Y>110</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[p_powerBiomassPlant = p_biomassPlantESDL.getPower();
-
-Geometry geometry = p_biomassPlantESDL.getGeometry();
-if (geometry instanceof Point){
-	Point point = (Point) geometry;
-	p_lonCoord = point.getLon();
-	p_latCoord = point.getLat();
-}
-
-f_drawPoint();]]></Body>
-				</Function>
-				<Function AccessType="default" StaticFunction="false">
-					<ReturnModificator>VOID</ReturnModificator>
-					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1658229395167</Id>
 					<Name><![CDATA[f_drawPoint]]></Name>
-					<X>50</X><Y>170</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Drawing the biomass plant]]></Description>
+					<X>30</X><Y>130</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2435,6 +2847,29 @@ double dy = dxdy[1];
 oval.setPos(dx, dy);
 text.setPos(dx-5, dy-5);
 ]]></Body>
+				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1658324457727</Id>
+					<Name><![CDATA[f_getPoint]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Import the biomass plant representation]]></Description>
+					<X>30</X><Y>110</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Body><![CDATA[Geometry geometry = p_biomassPlantESDL.getGeometry();
+if (geometry instanceof Point){
+	Point point = (Point) geometry;
+	p_lonCoord = point.getLon();
+	p_latCoord = point.getLat();
+}
+
+f_drawPoint();]]></Body>
 				</Function>
 			</Functions>
 			<AgentLinks>
@@ -2498,6 +2933,7 @@ text.setPos(dx-5, dy-5);
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<OnClickCode><![CDATA[model_UI.f_onClickBiomassPlant(self);]]></OnClickCode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>10</ZHeight>
@@ -2528,6 +2964,50 @@ text.setPos(dx-5, dy-5);
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<RoundedRectangle>
+					<Id>1658331483138</Id>
+					<Name><![CDATA[roundRectangle]]></Name>
+					<X>10</X><Y>10</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>170</Width>
+					<Height>180</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
+					<FillMaterial>null</FillMaterial>
+					<ArcRadius>10</ArcRadius>
+				</RoundedRectangle>
+				<Text>
+					<Id>1658331483140</Id>
+					<Name><![CDATA[text1]]></Name>
+					<X>30</X><Y>20</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[ESDL Importer]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>18</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2656,7 +3136,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229465701</Id>
 					<Name><![CDATA[p_heatPumpESDL]]></Name>
-					<X>50</X><Y>30</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+The imported heat pump from ESDL (ESDL type)]]></Description>
+					<X>30</X><Y>60</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2675,30 +3159,13 @@ import esdl.Geometry;]]></Import>
 					</Properties>                 
 				</Variable>
 				<Variable Class="Parameter">
-					<Id>1658229465704</Id>
-					<Name><![CDATA[p_powerHeatPump]]></Name>
-					<X>280</X><Y>160</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[double]]></Type>
-						<UnitType><![CDATA[NONE]]></UnitType>
-						<SdArray>false</SdArray>
-						<ParameterEditor>
-							<Id>1658229465702</Id>
-							<EditorContolType>TEXT_BOX</EditorContolType>
-							<MinSliderValue><![CDATA[0]]></MinSliderValue>
-							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
-							<DelimeterType>NO_DELIMETER</DelimeterType>
-						</ParameterEditor>
-					</Properties>                 
-				</Variable>
-				<Variable Class="Parameter">
 					<Id>1658229465707</Id>
 					<Name><![CDATA[p_latCoord]]></Name>
-					<X>280</X><Y>100</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Latitude of the heat pump]]></Description>
+					<X>30</X><Y>150</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2719,7 +3186,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229465710</Id>
 					<Name><![CDATA[p_lonCoord]]></Name>
-					<X>280</X><Y>130</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Longiute of the heat pump]]></Description>
+					<X>30</X><Y>170</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2737,21 +3208,48 @@ import esdl.Geometry;]]></Import>
 						</ParameterEditor>
 					</Properties>                 
 				</Variable>
+				<Variable Class="Parameter">
+					<Id>1658326688897</Id>
+					<Name><![CDATA[p_heatPumpAgent]]></Name>
+					<Description><![CDATA[@HMels
+@20/07/2022
+
+reference to to corresponding agent (anylogic type)]]></Description>
+					<X>30</X><Y>80</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[A_HeatPump]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<ParameterEditor>
+							<Id>1658326688895</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
 			</Variables>
 			<Functions>
 				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>VOID</ReturnModificator>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1658229465694</Id>
-					<Name><![CDATA[f_loadHeatPumpData]]></Name>
-					<X>50</X><Y>90</Y>
+					<Name><![CDATA[f_getPoint]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Import the heat pump representation]]></Description>
+					<X>30</X><Y>110</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[p_powerHeatPump = p_heatPumpESDL.getPower();
-
-Geometry geometry = p_heatPumpESDL.getGeometry();
+					<Body><![CDATA[Geometry geometry = p_heatPumpESDL.getGeometry();
 if (geometry instanceof Point){
 	Point point = (Point) geometry;
 	p_lonCoord = point.getLon();
@@ -2765,7 +3263,11 @@ f_drawPoint();]]></Body>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1658229465696</Id>
 					<Name><![CDATA[f_drawPoint]]></Name>
-					<X>50</X><Y>150</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Drawing the heat network]]></Description>
+					<X>30</X><Y>130</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2839,6 +3341,7 @@ text.setPos(dx-5, dy-5);
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<OnClickCode><![CDATA[model_UI.f_onClickHeatPumps(self);]]></OnClickCode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>10</ZHeight>
@@ -2869,6 +3372,50 @@ text.setPos(dx-5, dy-5);
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<RoundedRectangle>
+					<Id>1658331589417</Id>
+					<Name><![CDATA[roundRectangle]]></Name>
+					<X>10</X><Y>10</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>170</Width>
+					<Height>180</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
+					<FillMaterial>null</FillMaterial>
+					<ArcRadius>10</ArcRadius>
+				</RoundedRectangle>
+				<Text>
+					<Id>1658331589419</Id>
+					<Name><![CDATA[text1]]></Name>
+					<X>30</X><Y>20</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[ESDL Importer]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>18</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2997,7 +3544,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229523782</Id>
 					<Name><![CDATA[p_heatStorageESDL]]></Name>
-					<X>50</X><Y>60</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+The imported heat storage from ESDL (ESDL type)]]></Description>
+					<X>30</X><Y>60</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3016,30 +3567,13 @@ import esdl.Geometry;]]></Import>
 					</Properties>                 
 				</Variable>
 				<Variable Class="Parameter">
-					<Id>1658229523785</Id>
-					<Name><![CDATA[p_capacity]]></Name>
-					<X>270</X><Y>150</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[double]]></Type>
-						<UnitType><![CDATA[NONE]]></UnitType>
-						<SdArray>false</SdArray>
-						<ParameterEditor>
-							<Id>1658229523783</Id>
-							<EditorContolType>TEXT_BOX</EditorContolType>
-							<MinSliderValue><![CDATA[0]]></MinSliderValue>
-							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
-							<DelimeterType>NO_DELIMETER</DelimeterType>
-						</ParameterEditor>
-					</Properties>                 
-				</Variable>
-				<Variable Class="Parameter">
 					<Id>1658229523788</Id>
 					<Name><![CDATA[p_latCoord]]></Name>
-					<X>270</X><Y>90</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Latitude of the heat storage]]></Description>
+					<X>30</X><Y>150</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3060,7 +3594,11 @@ import esdl.Geometry;]]></Import>
 				<Variable Class="Parameter">
 					<Id>1658229523791</Id>
 					<Name><![CDATA[p_lonCoord]]></Name>
-					<X>270</X><Y>120</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Longitude of the heat storage]]></Description>
+					<X>30</X><Y>170</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3078,21 +3616,48 @@ import esdl.Geometry;]]></Import>
 						</ParameterEditor>
 					</Properties>                 
 				</Variable>
+				<Variable Class="Parameter">
+					<Id>1658326919704</Id>
+					<Name><![CDATA[p_heatStorageAgent]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+The reference to the agent]]></Description>
+					<X>30</X><Y>80</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[A_HeatStorage]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<ParameterEditor>
+							<Id>1658326919702</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
 			</Variables>
 			<Functions>
 				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>VOID</ReturnModificator>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1658229523775</Id>
-					<Name><![CDATA[f_loadHeatStorageData]]></Name>
-					<X>50</X><Y>100</Y>
+					<Name><![CDATA[f_getPoint]]></Name>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Import the heat storage representation]]></Description>
+					<X>30</X><Y>110</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Body><![CDATA[p_capacity = p_heatStorageESDL.getCapacity();
-
-Geometry geometry = p_heatStorageESDL.getGeometry();
+					<Body><![CDATA[Geometry geometry = p_heatStorageESDL.getGeometry();
 if (geometry instanceof Point){
 	Point point = (Point) geometry;
 	p_lonCoord = point.getLon();
@@ -3106,7 +3671,11 @@ f_drawPoint();]]></Body>
 					<ReturnType><![CDATA[double]]></ReturnType>
 					<Id>1658229523777</Id>
 					<Name><![CDATA[f_drawPoint]]></Name>
-					<X>50</X><Y>160</Y>
+					<Description><![CDATA[@maartenbastiaansen
+@14/07/2022
+
+Drawing the heat storage]]></Description>
+					<X>30</X><Y>130</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3180,6 +3749,7 @@ text.setPos(dx-5, dy-5);
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<OnClickCode><![CDATA[model_UI.f_onClickHeatStorage(self);]]></OnClickCode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
 					<ZHeight>10</ZHeight>
@@ -3210,6 +3780,50 @@ text.setPos(dx-5, dy-5);
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>8</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<RoundedRectangle>
+					<Id>1658331601904</Id>
+					<Name><![CDATA[roundRectangle]]></Name>
+					<X>10</X><Y>10</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<Width>170</Width>
+					<Height>180</Height>
+					<Rotation>0.0</Rotation>
+					<FillColor>-1</FillColor>
+					<FillMaterial>null</FillMaterial>
+					<ArcRadius>10</ArcRadius>
+				</RoundedRectangle>
+				<Text>
+					<Id>1658331601906</Id>
+					<Name><![CDATA[text1]]></Name>
+					<X>30</X><Y>20</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[ESDL Importer]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>18</Size>
 						<Style>0</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -3320,9 +3934,6 @@ text.setPos(dx-5, dy-5);
 			</Presentation>
 
 			<Parameters>			
-				<Parameter>
-					<ParameterName><![CDATA[p_importer]]></ParameterName>
-				</Parameter>
 			</Parameters>			
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
@@ -3342,225 +3953,6 @@ text.setPos(dx-5, dy-5);
 			<BypassInitialScreen>true</BypassInitialScreen>
 		</SimulationExperiment>	
 	</Experiments>
-	<JavaClasses>
-		<!--   =========   Java Class   ========  -->
-		<JavaClass>
-			<Id>1658230448363</Id>
-			<Name><![CDATA[ESDLImporter]]></Name>
-			<Text><![CDATA[// --- ESDL JAVA IMPORTER --- //
-
-
-// Import packages
-import java.io.IOException;
-import java.util.HashMap;
-
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.xmi.XMIResource;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-
-import esdl.Area;
-import esdl.Asset;
-import esdl.BiomassHeater;
-import esdl.Building;
-import esdl.BuildingUnit;
-import esdl.ElectricityNetwork;
-import esdl.EnergySystem;
-import esdl.EsdlPackage;
-import esdl.HeatNetwork;
-import esdl.HeatPump;
-import esdl.HeatStorage;
-import esdl.HeatingDemand;
-import esdl.Instance;
-import esdl.PVPanel;
-
-public class ESDLImporter {
-	
-	// Create list of imported assets from AnyLogic
-	ArrayList<Building> c_building = new ArrayList<Building>();
-	ArrayList<BuildingUnit> c_buildingUnits = new ArrayList<BuildingUnit>();
-	ArrayList<ElectricityNetwork> c_electricityNetworks = new ArrayList<ElectricityNetwork>();
-	ArrayList<HeatNetwork> c_heatNetworks = new ArrayList<HeatNetwork>();
-	ArrayList<HeatStorage> c_heatStorages = new ArrayList<HeatStorage>();
-	ArrayList<HeatingDemand> c_heatingDemands = new ArrayList<HeatingDemand>();
-	ArrayList<HeatPump> c_heatPumps = new ArrayList<HeatPump>();
-	ArrayList<PVPanel> c_pvPanels = new ArrayList<PVPanel>();
-	ArrayList<BiomassHeater> c_biomassPlant = new ArrayList<BiomassHeater>();
-	
-	
-	/***
-	 * Constructor: Aim of this script is to print a message about every asset in
-	 * the ESDL file.
-	 * 
-	 * @param esdlFileName
-	 * @throws IOException
-	 */
-	
-	public ESDLImporter(String esdlFileName) throws IOException {
-
-		System.out.println("Loading ESDL from file: " + esdlFileName);
-
-		// Load ESDL File into the EnergySystem object
-		EnergySystem energySystem = (EnergySystem) loadEcoreResource(esdlFileName);
-
-		// @formatter:off
-		//
-		// ESDL Structure:
-		// ---------------
-		// Energy System
-		// |- Energy System Instance
-		// 		|- Area
-		// 			|- Sub-area/Building (Optional)
-		// 				|- Assets (PV Panels, Demands, etc.)
-		// 			|- Assets (PV Panels, Demands, etc.)
-		// Start from outermost elements and work your way in
-		//
-		// @formatter:on
-
-		// Grab all instances of the EnergySystem
-		EList<Instance> instances = energySystem.getInstance();
-		for (Instance instance : instances) {
-			if (instance != null) {
-				//System.out.println("Processing instance with id: " + instance.getId());
-				// Each instance has a root area
-				Area area = instance.getArea();
-				if (area != null) {
-					// Process this area recursively (and print the asset indented accordingly)
-					processAssetsInArea(1, area);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Process assets in an area. Remember that an area can contain sub-areas
-	 * 
-	 * @param indent
-	 *            How many spaces to indent printing of the assets in this area by
-	 * @param area
-	 *            Area object to process
-	 */
-	public void processAssetsInArea(int indent, Area area) {
-
-		// For each sub-area (if any) in Area, process assets
-		for (Area subArea : area.getArea()) {
-			processAssetsInArea(indent + 1, subArea);
-		}
-
-		// Process assets contained in this area
-		processAssets(indent + 1, area.getAsset());
-	}
-
-	/***
-	 * Process assets from a list of assets. EList is an ECore wrapper around a Java
-	 * list, so you can use normal list functions.
-	 * 
-	 * @param indent
-	 *            How many spaces to indent printing of the assets in this area by
-	 * @param assets
-	 *            List of assets
-	 */
-	public void processAssets(int indent, EList<Asset> assets) {
-
-		// For all assets that are imported in list, do:
-		for (Asset asset : assets) {
-			
-			// If the asset is a building, it may contain assets inside of it.
-			// So recursively process the assets inside this building (if any) first.
-			if (asset instanceof Building) {
-				Building building = (Building) asset;
-				c_building.add(building);
-			}
-			// If asset is a building unit, the same rule as with buildings apply.
-			// Recursively process the assets inside this building unit (if any).
-			else if (asset instanceof BuildingUnit) {
-				BuildingUnit buildingUnit = (BuildingUnit) asset;
-				c_buildingUnits.add(buildingUnit);
-
-				processAssets(indent + 1, buildingUnit.getAsset());
-			}
-			
-			// For all other assets, do:
-			else if (asset instanceof ElectricityNetwork) {
-				ElectricityNetwork electricityNetwork = (ElectricityNetwork) asset;
-				c_electricityNetworks.add(electricityNetwork);
-			}
-			
-			else if (asset instanceof HeatNetwork) {
-				HeatNetwork heatNetwork = (HeatNetwork) asset;
-				c_heatNetworks.add(heatNetwork);
-			}
-			
-			else if (asset instanceof HeatStorage) {
-				HeatStorage heatStorage = (HeatStorage) asset;
-				c_heatStorages.add(heatStorage);
-			}
-			
-			else if (asset instanceof HeatingDemand) {
-				HeatingDemand heatingDemand = (HeatingDemand) asset;
-				c_heatingDemands.add(heatingDemand);
-			}
-			
-			else if (asset instanceof HeatPump) {
-				HeatPump heatPump = (HeatPump) asset;
-				c_heatPumps.add(heatPump);
-			}
-			
-			else if (asset instanceof PVPanel) {
-				PVPanel pvPanel = (PVPanel) asset;
-				c_pvPanels.add(pvPanel);
-			}
-			
-			else if (asset instanceof BiomassHeater) {
-				BiomassHeater biomassPlant = (BiomassHeater) asset;
-				c_biomassPlant.add(biomassPlant);
-			}
-			
-			else {
-				String assetClass = asset.getClass().getInterfaces()[0].getSimpleName();
-				// Remaning assets that are not imported are printed (this code can also be switched off):
-				String message = "Found Asset of type " + assetClass + " with id: " + asset.getId();
-				System.out.print(message);
-			}
-		}
-	}
-
-	/***
-	 * 
-	 * Function to load ESDL file into an EnergySystem object.
-	 * 
-	 * @param <T>
-	 *            Type of ECore object at the root of the XML (In our case, this is
-	 *            EnergySystem)
-	 * @param filepath
-	 *            Path to ESDL File
-	 * @return ECore object of type T (i.e, EnergySystem)
-	 * @throws IOException
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends EObject> T loadEcoreResource(String filepath) throws IOException {
-		EsdlPackage.eINSTANCE.eClass();
-		URI fileURI = URI.createFileURI(filepath);
-		XMIResourceImpl resource = new XMIResourceImpl(fileURI);
-		resource.getDefaultLoadOptions().put(XMIResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
-		resource.setIntrinsicIDToEObjectMap(new HashMap<String, EObject>());
-		resource.load(null);
-		return (T) resource.getContents().get(0);
-	}
-
-	/***
-	 * Main method
-	 * 
-	 * @param args
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws IOException {
-	}
-	
-}]]></Text>
-		</JavaClass>
-	</JavaClasses>
 	<ModelResources>
 		<Resource>
 			<Path><![CDATA[image2.png]]></Path>
