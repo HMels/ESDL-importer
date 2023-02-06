@@ -4,8 +4,10 @@ ESDL Importer is an open source tool created by Maarten Bastiaanse and changed b
 
 ## Getting Started
 
-To get started, download the latest version of the ESDL Importer from the ZEnMo website. Once downloaded, double-click the file to install the tool on your computer.
+To get started, download the latest version of the ESDL Importer from the website. Once downloaded, double-click the file to install the tool on your computer.
 
 ## Using the Tool
 
 Once installed, you can launch the ESDL Importer from the Windows Start Menu. The UI will open and you can begin to configure the tool and manage your ESDL files.
+
+Data can be loaded via https://mapeditor.hesi.energy/editor# (need an account)
